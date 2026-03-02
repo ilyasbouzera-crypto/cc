@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Wave — Achetez & Vendez des Sites Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #06060f;
+  --surface: #0d0d1f;
+  --surface2: #13132b;
+  --surface3: #1a1a38;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f4f4ff;
+  --muted: #6b6b9a;
+  --muted2: #9898c8;
+  --violet: #7c5cfc;
+  --violet-light: #a78bfa;
+  --cyan: #22d3ee;
+  --green: #4ade80;
+  --pink: #f472b6;
+  --orange: #fb923c;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  overflow-x: hidden;
+}
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 48px;
+  background: rgba(6,6,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #a78bfa, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+
+.nav-links { display: flex; gap: 8px; list-style: none; align-items: center; }
+
+.nav-links a {
+  color: var(--muted2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover { color: var(--text); background: var(--surface2); }
+
+.nav-cta {
+  background: var(--violet) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 24px rgba(124,92,252,0.4);
+}
+
+.nav-cta:hover { background: #9070ff !important; box-shadow: 0 0 32px rgba(124,92,252,0.6) !important; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(124,92,252,0.12) 0%, transparent 65%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 65%);
+  top: 20%; right: -10%;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid rgba(124,92,252,0.3);
+  border-radius: 100px;
+  padding: 6px 16px 6px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--violet-light);
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 2;
+  animation: fadeDown 0.6s ease forwards;
+}
+
+.badge-dot {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+
+h1 {
+  font-size: clamp(48px, 6vw, 88px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  position: relative;
+  z-index: 2;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+
+.grad {
+  background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+  max-width: 560px;
+  color: var(--muted2);
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 24px auto 40px;
+  position: relative;
+  z-index: 2;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex; gap: 12px; justify-content: center;
+  position: relative; z-index: 2;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+
+.btn-main {
+  background: linear-gradient(135deg, var(--violet), #5b21b6);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(124,92,252,0.4);
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit;
+}
+
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 0 48px rgba(124,92,252,0.6); }
+
+.btn-outline {
+  background: var(--surface2);
+  color: var(--text);
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit;
+}
+
+.btn-outline:hover { background: var(--surface3); border-color: rgba(255,255,255,0.2); }
+
+.hero-stats {
+  display: flex;
+  margin-top: 72px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative; z-index: 2;
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+
+.stat-item { padding: 24px 48px; text-align: center; border-right: 1px solid var(--border); flex: 1; }
+.stat-item:last-child { border-right: none; }
+
+.stat-val {
+  font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #a78bfa, #22d3ee);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: block;
+}
+
+.stat-lbl { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+
+/* SECTION */
+.section { padding: 96px 80px; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--violet-light); margin-bottom: 16px;
+}
+
+.eyebrow::before { content: ''; width: 20px; height: 2px; background: var(--violet); border-radius: 2px; }
+
+h2 { font-size: clamp(28px, 3vw, 44px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+
+/* FILTERS */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
+
+.filter-btn {
+  padding: 8px 18px; border-radius: 100px;
+  border: 1px solid var(--border2); background: var(--surface);
+  color: var(--muted2); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+
+.filter-btn:hover { border-color: rgba(124,92,252,0.4); color: var(--violet-light); }
+.filter-btn.active { background: rgba(124,92,252,0.15); border-color: rgba(124,92,252,0.5); color: var(--violet-light); }
+
+/* CARDS */
+.listings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: rgba(124,92,252,0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,92,252,0.2);
+}
+
+.card-thumb {
+  width: 100%; aspect-ratio: 16/9;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; position: relative;
+}
+
+.card-thumb::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, var(--surface));
+}
+
+.card-body { padding: 20px; }
+.card-badges { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+
+.tag { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
+.tag-v { background: rgba(124,92,252,0.15); color: var(--violet-light); }
+.tag-c { background: rgba(34,211,238,0.12); color: var(--cyan); }
+.tag-g { background: rgba(74,222,128,0.12); color: var(--green); }
+.tag-p { background: rgba(244,114,182,0.12); color: var(--pink); }
+.tag-o { background: rgba(251,146,60,0.12); color: var(--orange); }
+.tag-ok { background: rgba(74,222,128,0.1); color: var(--green); }
+
+.card-name { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
+.card-url { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+.card-desc { font-size: 12px; line-height: 1.65; color: var(--muted2); margin-bottom: 16px; }
+
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+
+.mbox { background: var(--surface2); border-radius: 10px; padding: 10px 8px; text-align: center; }
+.mval { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; display: block; }
+.mval.green { color: var(--green); }
+.mval.violet { color: var(--violet-light); }
+.mval.cyan { color: var(--cyan); }
+.mlbl { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; display: block; }
+
+.card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); }
+
+.card-price {
+  font-size: 26px; font-weight: 800; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #a78bfa, #22d3ee);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.card-price-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.btn-sm {
+  padding: 10px 18px; border-radius: 10px;
+  background: rgba(124,92,252,0.12); border: 1px solid rgba(124,92,252,0.3);
+  color: var(--violet-light); font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; text-decoration: none;
+  display: inline-block; font-family: inherit;
+}
+.btn-sm:hover { background: rgba(124,92,252,0.25); }
+
+/* FEATURED */
+.featured-wrap {
+  background: linear-gradient(135deg, var(--surface2), #1a1040);
+  border: 1px solid rgba(124,92,252,0.25);
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  overflow: hidden;
+  margin-bottom: 48px;
+  position: relative;
+}
+
+.featured-wrap::before {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(124,92,252,0.12), transparent 70%);
+  top: -100px; left: -100px;
+}
+
+.f-left {
+  padding: 56px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative; z-index: 1;
+}
+
+.f-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 11px; font-weight: 700; color: #fbbf24;
+  width: fit-content; margin-bottom: 24px;
+}
+
+.f-name { font-size: 44px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
+.f-url { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+.f-desc { color: var(--muted2); font-size: 13px; line-height: 1.7; margin-bottom: 32px; max-width: 360px; }
+.f-price { font-size: 56px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 6px; }
+.f-price-note { color: var(--muted); font-size: 12px; margin-bottom: 28px; }
+
+.f-right {
+  padding: 48px;
+  border-left: 1px solid rgba(255,255,255,0.05);
+  display: flex; flex-direction: column; justify-content: center; gap: 16px;
+}
+
+.fm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.fm {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+}
+
+.fm-val { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; display: block; margin-bottom: 4px; }
+.fm-lbl { font-size: 11px; color: var(--muted); }
+
+.chart-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+}
+.chart-title { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+.chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 56px; }
+.bar { flex: 1; border-radius: 4px 4px 0 0; }
+
+/* PROCESS */
+.process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.process-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 32px 28px;
+  position: relative; overflow: hidden; transition: all 0.3s;
+}
+
+.process-card:hover { border-color: rgba(124,92,252,0.35); background: var(--surface2); }
+
+.process-card::before {
+  content: attr(data-num);
+  position: absolute; top: -10px; right: 16px;
+  font-size: 80px; font-weight: 800;
+  color: rgba(255,255,255,0.03); letter-spacing: -0.05em;
+}
+
+.p-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
+.p-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+.p-desc { font-size: 12px; color: var(--muted2); line-height: 1.65; }
+
+/* PRICING */
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.price-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 40px 32px;
+  position: relative; transition: all 0.3s;
+}
+
+.price-card:hover { transform: translateY(-4px); }
+
+.price-card.pop {
+  background: linear-gradient(135deg, #1a1040, #0d0d2f);
+  border-color: rgba(124,92,252,0.4);
+  box-shadow: 0 0 60px rgba(124,92,252,0.15);
+}
+
+.pop-badge {
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--violet), #5b21b6);
+  color: #fff; font-size: 11px; font-weight: 700;
+  padding: 5px 18px; border-radius: 0 0 12px 12px; white-space: nowrap;
+}
+
+.price-name { font-size: 14px; font-weight: 700; color: var(--muted2); margin-bottom: 16px; letter-spacing: 0.05em; text-transform: uppercase; }
+.price-amount { font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 4px; }
+.price-period { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+.price-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+
+.price-features li { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--muted2); line-height: 1.4; }
+
+.chk {
+  flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(74,222,128,0.15); color: var(--green);
+  font-size: 10px; display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+
+.btn-price {
+  width: 100%; padding: 14px; border-radius: 12px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; font-family: inherit; border: none;
+}
+
+.btn-price-main {
+  background: linear-gradient(135deg, var(--violet), #5b21b6);
+  color: #fff; box-shadow: 0 8px 24px rgba(124,92,252,0.35);
+}
+.btn-price-main:hover { box-shadow: 0 12px 32px rgba(124,92,252,0.5); transform: translateY(-1px); }
+
+.btn-price-out {
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border2);
+}
+.btn-price-out:hover { background: var(--surface3); }
+
+/* SELL */
+.sell-cta {
+  background: linear-gradient(135deg, var(--surface2), #100f30);
+  border: 1px solid rgba(124,92,252,0.2);
+  border-radius: 24px; padding: 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: center; position: relative; overflow: hidden;
+}
+
+.sell-cta::before {
+  content: '';
+  position: absolute; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(124,92,252,0.1), transparent 70%);
+  bottom: -200px; right: -100px;
+}
+
+.perks { list-style: none; display: flex; flex-direction: column; gap: 14px; margin: 24px 0 36px; }
+
+.perks li { display: flex; gap: 12px; align-items: center; font-size: 14px; font-weight: 500; }
+
+.picon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+
+.sell-form { background: rgba(255,255,255,0.04); border: 1px solid var(--border2); border-radius: 20px; padding: 32px; position: relative; z-index: 1; }
+
+.form-title { font-size: 18px; font-weight: 700; margin-bottom: 24px; }
+
+.igroup { margin-bottom: 16px; }
+.ilabel { font-size: 12px; font-weight: 600; color: var(--muted2); margin-bottom: 8px; display: block; }
+
+.ifield {
+  width: 100%; background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 12px 16px; color: var(--text);
+  font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s;
+}
+.ifield:focus { border-color: rgba(124,92,252,0.5); }
+.ifield::placeholder { color: var(--muted); }
+.irow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+footer {
+  border-top: 1px solid var(--border); padding: 48px 80px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.flinks { display: flex; gap: 24px; list-style: none; }
+.flinks a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+.flinks a:hover { color: var(--text); }
+.fcopy { color: var(--muted); font-size: 12px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; }
+.d4 { transition-delay: 0.4s; } .d5 { transition-delay: 0.5s; } .d6 { transition-delay: 0.6s; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--violet); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Digital Wave</a>
+  <ul class="nav-links">
+    <li><a href="#acheter">Acheter</a></li>
+    <li><a href="#vendre">Vendre</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
+    <li><a href="#vendre" class="nav-cta">Déposer mon site</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="badge-dot">⚡</span>La marketplace #1 des sites web rentables en France</div>
+  <h1>Achetez & vendez<br>des sites <span class="grad">en quelques clics</span></h1>
+  <p class="hero-sub">Des sites web vérifiés, des données transparentes et des transactions 100% sécurisées. Trouvez votre prochain business digital dès aujourd'hui.</p>
+  <div class="hero-actions">
+    <a href="#acheter" class="btn-main">🔍 Explorer les sites</a>
+    <a href="#vendre" class="btn-outline">💰 Vendre mon site</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><span class="stat-val">847</span><span class="stat-lbl">Sites disponibles</span></div>
+    <div class="stat-item"><span class="stat-val">2.4M€</span><span class="stat-lbl">Volume de ventes</span></div>
+    <div class="stat-item"><span class="stat-val">12K+</span><span class="stat-lbl">Acheteurs inscrits</span></div>
+    <div class="stat-item"><span class="stat-val">21 j</span><span class="stat-lbl">Délai moyen de vente</span></div>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section class="section" id="acheter">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;">
+    <div><p class="eyebrow">Catalogue</p><h2>Sites <span class="grad">disponibles</span></h2></div>
+    <a href="#" class="btn-outline" style="font-size:13px;">Voir les 847 sites →</a>
+  </div>
+
+  <!-- Featured -->
+  <div class="featured-wrap reveal">
+    <div class="f-left">
+      <div>
+        <div class="f-badge">⭐ Coup de cœur de la semaine</div>
+        <div class="f-name">FormaPro.io</div>
+        <div class="f-url">formapro.io · Plateforme SaaS</div>
+        <p class="f-desc">Plateforme de formation B2B avec 1 200 abonnés actifs. Revenus stables depuis 18 mois, churn &lt; 2%, stack Next.js + Stripe.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;">
+          <span class="tag tag-v">SaaS</span>
+          <span class="tag tag-ok">✓ Vérifié</span>
+          <span class="tag tag-c">Prix négociable</span>
+        </div>
+      </div>
+      <div>
+        <div class="f-price grad">99 €</div>
+        <div class="f-price-note">Frais d'annonce Premium · revenus du site : 8 900 €/mois</div>
+        <a href="#" class="btn-main" style="width:fit-content;">Voir l'annonce complète →</a>
+      </div>
+    </div>
+    <div class="f-right">
+      <div class="fm-grid">
+        <div class="fm"><span class="fm-val grad" style="-webkit-text-fill-color:transparent;">8 900€</span><span class="fm-lbl">Revenus/mois</span></div>
+        <div class="fm"><span class="fm-val" style="color:var(--green);">1 240</span><span class="fm-lbl">Abonnés actifs</span></div>
+        <div class="fm"><span class="fm-val" style="color:var(--cyan);">1.8%</span><span class="fm-lbl">Churn mensuel</span></div>
+        <div class="fm"><span class="fm-val" style="color:var(--violet-light);">18 mois</span><span class="fm-lbl">Historique</span></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">Croissance revenus · 6 derniers mois</div>
+        <div class="chart-bars">
+          <div class="bar" style="height:45%;background:linear-gradient(to top,rgba(124,92,252,0.35),rgba(124,92,252,0.15));"></div>
+          <div class="bar" style="height:58%;background:linear-gradient(to top,rgba(124,92,252,0.45),rgba(124,92,252,0.2));"></div>
+          <div class="bar" style="height:68%;background:linear-gradient(to top,rgba(124,92,252,0.55),rgba(124,92,252,0.25));"></div>
+          <div class="bar" style="height:80%;background:linear-gradient(to top,rgba(124,92,252,0.7),rgba(124,92,252,0.35));"></div>
+          <div class="bar" style="height:90%;background:linear-gradient(to top,rgba(124,92,252,0.85),rgba(124,92,252,0.4));"></div>
+          <div class="bar" style="height:100%;background:linear-gradient(to top,#7c5cfc,#a78bfa);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active">Tous</button>
+    <button class="filter-btn">E-Commerce</button>
+    <button class="filter-btn">SaaS</button>
+    <button class="filter-btn">Blog / SEO</button>
+    <button class="filter-btn">Newsletter</button>
+    <button class="filter-btn">Marketplace</button>
+    <button class="filter-btn">49 € Starter</button>
+    <button class="filter-btn">79 € Pro</button>
+    <button class="filter-btn">99 € Premium</button>
+  </div>
+
+  <div class="listings-grid">
+    <div class="card reveal d1">
+      <div class="card-thumb" style="background:linear-gradient(135deg,#1a1a2e,#2d1b69);">🛍️</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="tag tag-c">E-Commerce</span><span class="tag tag-ok">✓ Vérifié</span></div>
+        <div class="card-name">MaisonNature.fr</div>
+        <div class="card-url">maisonnature.fr</div>
+        <p class="card-desc">Boutique déco naturelle & éco-responsable. 4 200 clients actifs, 38% de retour client.</p>
+        <div class="metrics">
+          <div class="mbox"><span class="mval green">3 100€</span><span class="mlbl">Rev./mois</span></div>
+          <div class="mbox"><span class="mval">24 mois</span><span class="mlbl">Ancienneté</span></div>
+          <div class="mbox"><span class="mval violet">×2.8</span><span class="mlbl">Multiple</span></div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
+          <a href="#" class="btn-sm">Voir →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal d2">
+      <div class="card-thumb" style="background:linear-gradient(135deg,#0f2027,#203a43);">📈</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="tag tag-g">Blog / SEO</span><span class="tag tag-ok">✓ Vérifié</span></div>
+        <div class="card-name">MonArgentFacile</div>
+        <div class="card-url">monargentfacile.com</div>
+        <p class="card-desc">Blog finance perso, 85 000 visiteurs/mois. Monétisé via affiliation et ads. Contenu externalisé.</p>
+        <div class="metrics">
+          <div class="mbox"><span class="mval green">2 200€</span><span class="mlbl">Rev./mois</span></div>
+          <div class="mbox"><span class="mval">36 mois</span><span class="mlbl">Ancienneté</span></div>
+          <div class="mbox"><span class="mval violet">×2.5</span><span class="mlbl">Multiple</span></div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
+          <a href="#" class="btn-sm">Voir →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal d3">
+      <div class="card-thumb" style="background:linear-gradient(135deg,#1a0533,#2d0b5c);">⚡</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="tag tag-v">SaaS</span><span class="tag tag-ok">✓ Vérifié</span></div>
+        <div class="card-name">PlannerIQ</div>
+        <div class="card-url">planneriq.io</div>
+        <p class="card-desc">Outil de planning pour freelances. 420 abonnés payants, ARR 75K€. Churn &lt; 3%/mois.</p>
+        <div class="metrics">
+          <div class="mbox"><span class="mval green">6 300€</span><span class="mlbl">Rev./mois</span></div>
+          <div class="mbox"><span class="mval">14 mois</span><span class="mlbl">Ancienneté</span></div>
+          <div class="mbox"><span class="mval violet">×2.1</span><span class="mlbl">Multiple</span></div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-price">79 €</div><div class="card-price-sub">Frais de publication</div></div>
+          <a href="#" class="btn-sm">Voir →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal d4">
+      <div class="card-thumb" style="background:linear-gradient(135deg,#2d0533,#5c0b4d);">💌</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="tag tag-p">Newsletter</span></div>
+        <div class="card-name">TechWeekly.fr</div>
+        <div class="card-url">techweekly.fr</div>
+        <p class="card-desc">Newsletter tech, 28 000 abonnés, taux d'ouverture 42%. Revenus sponsoring + affiliation.</p>
+        <div class="metrics">
+          <div class="mbox"><span class="mval green">1 800€</span><span class="mlbl">Rev./mois</span></div>
+          <div class="mbox"><span class="mval">20 mois</span><span class="mlbl">Ancienneté</span></div>
+          <div class="mbox"><span class="mval violet">×3.0</span><span class="mlbl">Multiple</span></div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
+          <a href="#" class="btn-sm">Voir →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal d5">
+      <div class="card-thumb" style="background:linear-gradient(135deg,#082030,#0d3d5c);">🏪</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="tag tag-o">Marketplace</span><span class="tag tag-ok">✓ Vérifié</span></div>
+        <div class="card-name">ArtisanPlace</div>
+        <div class="card-url">artisanplace.fr</div>
+        <p class="card-desc">Marketplace artisans français. 1 800 vendeurs, 12 000 transactions/an. Commission 8%.</p>
+        <div class="metrics">
+          <div class="mbox"><span class="mval green">4 400€</span><span class="mlbl">Rev./mois</span></div>
+          <div class="mbox"><span class="mval">42 mois</span><span class="mlbl">Ancienneté</span></div>
+          <div class="mbox"><span class="mval violet">×2.6</span><span class="mlbl">Multiple</span></div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-price">79 €</div><div class="card-price-sub">Frais de publication</div></div>
+          <a href="#" class="btn-sm">Voir →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal d6">
+      <div class="card-thumb" style="background:linear-gradient(135deg,#0a1f0d,#1a4020);">🥗</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="tag tag-g">Contenu</span></div>
+        <div class="card-name">CuisineVitale</div>
+        <div class="card-url">cuisinevitale.com</div>
+        <p class="card-desc">Site recettes santé, 120 000 visiteurs/mois. Ads + produits dérivés. SEO très solide.</p>
+        <div class="metrics">
+          <div class="mbox"><span class="mval green">1 600€</span><span class="mlbl">Rev./mois</span></div>
+          <div class="mbox"><span class="mval">51 mois</span><span class="mlbl">Ancienneté</span></div>
+          <div class="mbox"><span class="mval violet">×2.2</span><span class="mlbl">Multiple</span></div>
+        </div>
+        <div class="card-footer">
+          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
+          <a href="#" class="btn-sm">Voir →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:40px;">
+    <a href="#" class="btn-main">Voir les 847 sites disponibles</a>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div style="text-align:center;margin-bottom:56px;">
+    <p class="eyebrow" style="justify-content:center;">Processus</p>
+    <h2>Comment ça <span class="grad">fonctionne</span></h2>
+    <p style="color:var(--muted2);margin-top:12px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.6;font-size:15px;">Simple, sécurisé et accompagné de A à Z.</p>
+  </div>
+  <div class="process-grid">
+    <div class="process-card reveal d1" data-num="01"><div class="p-icon" style="background:rgba(124,92,252,0.12);">🔍</div><div class="p-title">Explorez</div><p class="p-desc">Parcourez notre catalogue de sites vérifiés. Filtrez par secteur, revenus ou potentiel.</p></div>
+    <div class="process-card reveal d2" data-num="02"><div class="p-icon" style="background:rgba(34,211,238,0.1);">📊</div><div class="p-title">Analysez</div><p class="p-desc">Accédez aux rapports financiers et statistiques vérifiées par notre équipe d'experts.</p></div>
+    <div class="process-card reveal d3" data-num="03"><div class="p-icon" style="background:rgba(74,222,128,0.1);">🤝</div><div class="p-title">Négociez</div><p class="p-desc">Contactez le vendeur via notre messagerie sécurisée et négociez les conditions.</p></div>
+    <div class="process-card reveal d4" data-num="04"><div class="p-icon" style="background:rgba(244,114,182,0.1);">⚡</div><div class="p-title">Transférez</div><p class="p-desc">Migration accompagnée et transfert des actifs. Paiement sécurisé par séquestre.</p></div>
+  </div>
+</section>
+
+<!-- TARIFS -->
+<section class="section" id="tarifs">
+  <div style="text-align:center;margin-bottom:56px;">
+    <p class="eyebrow" style="justify-content:center;">Tarifs</p>
+    <h2>Publiez votre site dès <span class="grad">49 €</span></h2>
+    <p style="color:var(--muted2);margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;">Sans commission cachée. Vous payez uniquement pour publier votre annonce.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal d1">
+      <div class="price-name">Starter</div>
+      <div class="price-amount">49 €</div>
+      <div class="price-period">Publication unique · 30 jours</div>
+      <ul class="price-features">
+        <li><span class="chk">✓</span>Annonce visible 30 jours</li>
+        <li><span class="chk">✓</span>Jusqu'à 5 photos</li>
+        <li><span class="chk">✓</span>Messagerie acheteurs</li>
+        <li><span class="chk">✓</span>Badge "Nouveau"</li>
+        <li><span class="chk">✓</span>Support par email</li>
+      </ul>
+      <button class="btn-price btn-price-out">Commencer</button>
+    </div>
+
+    <div class="price-card pop reveal d2">
+      <div class="pop-badge">⭐ Le plus populaire</div>
+      <div class="price-name" style="color:var(--violet-light);">Pro</div>
+      <div class="price-amount grad" style="-webkit-text-fill-color:transparent;">79 €</div>
+      <div class="price-period">Publication unique · 60 jours</div>
+      <ul class="price-features">
+        <li><span class="chk">✓</span>Annonce visible 60 jours</li>
+        <li><span class="chk">✓</span>Photos & vidéos illimitées</li>
+        <li><span class="chk">✓</span>Mise en avant dans les résultats</li>
+        <li><span class="chk">✓</span>Badge "Vérifié" prioritaire</li>
+        <li><span class="chk">✓</span>Rapport financier inclus</li>
+        <li><span class="chk">✓</span>Support prioritaire 7j/7</li>
+      </ul>
+      <button class="btn-price btn-price-main">Choisir Pro</button>
+    </div>
+
+    <div class="price-card reveal d3">
+      <div class="price-name">Premium</div>
+      <div class="price-amount">99 €</div>
+      <div class="price-period">Publication unique · 90 jours</div>
+      <ul class="price-features">
+        <li><span class="chk">✓</span>Annonce visible 90 jours</li>
+        <li><span class="chk">✓</span>Position coup de cœur homepage</li>
+        <li><span class="chk">✓</span>Newsletter à 12 000 acheteurs</li>
+        <li><span class="chk">✓</span>Accompagnement négociation</li>
+        <li><span class="chk">✓</span>Évaluation expert offerte</li>
+        <li><span class="chk">✓</span>Manager dédié</li>
+      </ul>
+      <button class="btn-price btn-price-out">Choisir Premium</button>
+    </div>
+  </div>
+</section>
+
+<!-- SELL -->
+<section class="section" id="vendre">
+  <div class="sell-cta reveal">
+    <div class="sell-left">
+      <p class="eyebrow">Vendeurs</p>
+      <h2>Vendez votre site<br>au <span class="grad">meilleur prix</span></h2>
+      <p style="color:var(--muted2);font-size:15px;line-height:1.7;">Publiez en 10 minutes et accédez à 12 000+ acheteurs qualifiés et investisseurs actifs.</p>
+      <ul class="perks">
+        <li><div class="picon" style="background:rgba(124,92,252,0.15);">🎯</div>Évaluation gratuite par nos experts en 48h</li>
+        <li><div class="picon" style="background:rgba(34,211,238,0.12);">🔒</div>Paiement sécurisé par séquestre — zéro risque</li>
+        <li><div class="picon" style="background:rgba(74,222,128,0.12);">📣</div>Diffusion à 12 000+ acheteurs qualifiés</li>
+        <li><div class="picon" style="background:rgba(251,146,60,0.12);">⚡</div>94% des sites vendus en moins de 30 jours</li>
+      </ul>
+      <a href="#tarifs" class="btn-main" style="width:fit-content;">Publier mon annonce dès 49 € →</a>
+    </div>
+    <div class="sell-right">
+      <div class="sell-form">
+        <div class="form-title">Estimation gratuite 📊</div>
+        <div class="irow">
+          <div class="igroup"><label class="ilabel">Nom du site</label><input class="ifield" placeholder="monsite.fr" /></div>
+          <div class="igroup"><label class="ilabel">Catégorie</label><input class="ifield" placeholder="SaaS, Blog..." /></div>
+        </div>
+        <div class="igroup"><label class="ilabel">Revenus mensuels moyens</label><input class="ifield" placeholder="Ex : 2 000 €/mois" /></div>
+        <div class="igroup"><label class="ilabel">Ancienneté du site</label><input class="ifield" placeholder="Ex : 18 mois" /></div>
+        <button class="btn-price btn-price-main" style="margin-top:8px;">Obtenir mon estimation gratuite ✨</button>
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:14px;">Sans engagement · Réponse sous 48h</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="logo" style="font-size:18px;">Digital Wave</span>
+  <ul class="flinks">
+    <li><a href="#">À propos</a></li>
+    <li><a href="#">Comment ça marche</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">CGV</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <span class="fcopy">© 2026 Digital Wave · Tous droits réservés</span>
+</footer>
+
+<script>
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
