@@ -3,870 +3,2308 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Wave — Achetez & Vendez des Sites Web</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>LoyalPass — SaaS Fidélité</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<!-- Google Wallet SDK (explicit render, no auto-parse) -->
+<script src="https://apis.google.com/js/platform.js" async defer>{"parsetags":"explicit"}</script>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
 :root {
-  --bg: #06060f;
-  --surface: #0d0d1f;
-  --surface2: #13132b;
-  --surface3: #1a1a38;
-  --border: rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.12);
-  --text: #f4f4ff;
-  --muted: #6b6b9a;
-  --muted2: #9898c8;
-  --violet: #7c5cfc;
-  --violet-light: #a78bfa;
-  --cyan: #22d3ee;
-  --green: #4ade80;
-  --pink: #f472b6;
-  --orange: #fb923c;
+  --bg: #f6f5ff;
+  --surface: #ffffff;
+  --surface2: #f0effe;
+  --border: #e4e2f8;
+  --accent: #5b4ef0;
+  --accent-l: #7c74f5;
+  --accent-dim: rgba(91,78,240,.1);
+  --danger: #ef4444;
+  --success: #10b981;
+  --warn: #f59e0b;
+  --text: #18172e;
+  --text2: #6a6898;
+  --muted: #b0aed0;
+  --r: 14px;
+  --r-sm: 8px;
+  --sh: 0 2px 16px rgba(91,78,240,.07);
+  --sh-md: 0 8px 40px rgba(91,78,240,.13);
 }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Instrument Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+h1,h2,h3,h4,h5,h6 { font-family: 'Outfit', sans-serif; }
+::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-html { scroll-behavior: smooth; }
+/* ── LAYOUT */
+#app { display: flex; min-height: 100vh; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  overflow-x: hidden;
+/* ── SIDEBAR */
+.sidebar {
+  width: 240px; flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1.5px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
 }
+.s-logo { padding: 22px 18px; border-bottom: 1.5px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.s-logo-mark {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-l));
+  display: grid; place-items: center; color: white;
+  font-weight: 900; font-size: .9rem; font-family: 'Outfit',sans-serif; flex-shrink: 0;
+}
+.s-logo-txt { font-family: 'Outfit',sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--text); }
+.s-nav { flex: 1; padding: 10px; overflow-y: auto; }
+.s-section { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); padding: 10px 8px 5px; }
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 11px; border-radius: 10px; cursor: pointer;
+  color: var(--text2); font-size: .875rem; font-weight: 500;
+  transition: all .15s; margin-bottom: 1px; border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+.nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+.s-footer { padding: 14px 10px; border-top: 1.5px solid var(--border); }
+.merchant-chip {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 11px; border-radius: 10px; background: var(--surface2);
+}
+.m-avatar {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: grid; place-items: center; font-weight: 800;
+  font-size: .85rem; color: white; font-family: 'Outfit',sans-serif; flex-shrink: 0;
+}
+.m-name { font-size: .82rem; font-weight: 700; color: var(--text); }
+.m-role { font-size: .68rem; color: var(--muted); }
 
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex;
+/* ── MAIN */
+.main { flex: 1; margin-left: 240px; min-height: 100vh; }
+.p-header { padding: 30px 36px 0; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.p-title { font-size: 1.55rem; font-weight: 800; }
+.p-sub { color: var(--text2); font-size: .875rem; margin-top: 2px; }
+.p-body { padding: 22px 36px 48px; }
+
+/* ── SCREENS */
+.screen { display: none; animation: fadeUp .3s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── CARDS */
+.card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 22px; box-shadow: var(--sh); }
+.card-title { font-size: .95rem; font-weight: 700; margin-bottom: 3px; }
+.card-sub { font-size: .8rem; color: var(--text2); }
+
+/* ── STAT GRID */
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+.stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 18px 20px; transition: box-shadow .2s; }
+.stat-card:hover { box-shadow: var(--sh-md); }
+.stat-icon { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; font-size: 1.1rem; margin-bottom: 12px; }
+.stat-val { font-family: 'Outfit',sans-serif; font-size: 2.1rem; font-weight: 900; line-height: 1; }
+.stat-lbl { font-size: .78rem; color: var(--text2); margin-top: 4px; font-weight: 500; }
+.stat-trend { font-size: .72rem; color: var(--success); margin-top: 7px; font-weight: 600; }
+.stat-trend.down { color: var(--danger); }
+
+/* ── GRID 2 */
+.grid-2 { display: grid; grid-template-columns: 1fr 320px; gap: 18px; }
+
+/* ── CHART */
+.chart-wrap { position: relative; height: 160px; margin-top: 10px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 100%; }
+.chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; justify-content: flex-end; }
+.chart-bar {
+  width: 100%; border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-l) 100%);
+  transition: height .5s ease; cursor: pointer; position: relative;
+}
+.chart-bar:hover { filter: brightness(1.1); }
+.chart-bar::after { content: attr(data-val); position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: .68rem; font-weight: 700; color: var(--accent); white-space: nowrap; opacity: 0; transition: opacity .2s; }
+.chart-bar:hover::after { opacity: 1; }
+.chart-lbl { font-size: .68rem; color: var(--muted); }
+
+/* ── TABLE */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th { text-align: left; padding: 8px 12px; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); border-bottom: 1.5px solid var(--border); }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr:hover { background: var(--surface2); }
+tbody td { padding: 11px 12px; font-size: .845rem; vertical-align: middle; }
+tbody tr:last-child { border-bottom: none; }
+
+/* ── BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-family: 'Outfit',sans-serif; font-size: .85rem; font-weight: 700; cursor: pointer; border: none; transition: all .17s; white-space: nowrap; }
+.btn-p { background: linear-gradient(135deg,var(--accent),var(--accent-l)); color: white; box-shadow: 0 4px 14px rgba(91,78,240,.25); }
+.btn-p:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(91,78,240,.35); }
+.btn-s { background: var(--surface2); color: var(--text); border: 1.5px solid var(--border); }
+.btn-s:hover { border-color: var(--accent); color: var(--accent); }
+.btn-g { background: transparent; color: var(--text2); border: none; }
+.btn-g:hover { background: var(--surface2); color: var(--text); }
+.btn-sm { padding: 6px 12px; font-size: .77rem; border-radius: 8px; }
+.btn-icon { padding: 8px; border-radius: 9px; }
+.btn-success { background: #d1fae5; color: #065f46; border: 1.5px solid #a7f3d0; }
+.btn-success:hover { background: var(--success); color: white; }
+.btn-danger { background: #fee2e2; color: #991b1b; border: 1.5px solid #fecaca; }
+.btn-danger:hover { background: var(--danger); color: white; }
+
+/* ── BADGES */
+.badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: 100px; font-size: .7rem; font-weight: 700; }
+.b-green { background: #d1fae5; color: #065f46; }
+.b-yellow { background: #fef3c7; color: #92400e; }
+.b-red { background: #fee2e2; color: #991b1b; }
+.b-purple { background: var(--accent-dim); color: var(--accent); }
+.b-blue { background: #dbeafe; color: #1e40af; }
+.b-gray { background: #f1f5f9; color: #475569; }
+
+/* ── PROGRESS */
+.prog-wrap { background: var(--surface2); border-radius: 100px; height: 7px; }
+.prog-bar { height: 7px; border-radius: 100px; background: linear-gradient(90deg,var(--accent),var(--accent-l)); transition: width .5s ease; }
+
+/* ── FORMS */
+.fg { margin-bottom: 16px; }
+label { display: block; font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+input[type=text],input[type=email],input[type=number],input[type=password],select,textarea {
+  width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: var(--r-sm); padding: 9px 12px;
+  font-family: 'Instrument Sans',sans-serif; font-size: .875rem; color: var(--text);
+  outline: none; transition: border-color .2s; -webkit-appearance: none;
+}
+input:focus,select:focus,textarea:focus { border-color: var(--accent); background: white; }
+input::placeholder { color: var(--muted); }
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+input[type=range] { width: 100%; accent-color: var(--accent); background: none; border: none; padding: 4px 0; }
+input[type=color] { width: 40px; height: 40px; padding: 2px; border-radius: 8px; cursor: pointer; border: 1.5px solid var(--border); }
+
+/* ── MODAL */
+.overlay { position: fixed; inset: 0; background: rgba(15,12,50,.4); backdrop-filter: blur(5px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 16px; animation: fadeIn .15s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: var(--surface); border-radius: 20px; padding: 28px; width: 100%; max-width: 520px; box-shadow: var(--sh-md); max-height: 90vh; overflow-y: auto; }
+.modal-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.modal-title { font-size: 1.15rem; font-weight: 800; }
+.modal-close { width: 32px; height: 32px; border-radius: 8px; background: var(--surface2); border: none; cursor: pointer; display: grid; place-items: center; color: var(--text2); font-size: 1.1rem; transition: background .15s; }
+.modal-close:hover { background: var(--border); }
+
+/* ── AVATAR */
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .75rem; color: white; flex-shrink: 0; }
+
+/* ── TOAST */
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--text); color: white;
+  padding: 12px 18px; border-radius: 12px;
+  font-size: .85rem; font-weight: 600;
+  box-shadow: 0 8px 30px rgba(0,0,0,.2);
+  animation: slideIn .25s ease; min-width: 260px;
+}
+.toast.success { background: #065f46; }
+.toast.error { background: #991b1b; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+/* ── WALLET SPECIFIC */
+
+/* Pass card preview */
+.pass-preview {
+  border-radius: 18px; padding: 20px 22px;
+  position: relative; overflow: hidden;
+  min-height: 170px; color: white;
+  box-shadow: 0 12px 40px rgba(0,0,0,.18);
+}
+.pass-preview::before {
+  content: ''; position: absolute; inset: 0;
+  background: inherit; filter: brightness(.85);
+  z-index: 0;
+}
+.pass-preview > * { position: relative; z-index: 1; }
+.pass-preview.apple { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+.pass-preview.google { background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); }
+
+.pass-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.pass-logo { display: flex; align-items: center; gap: 8px; }
+.pass-logo-dot { width: 28px; height: 28px; border-radius: 8px; background: white; display: grid; place-items: center; font-weight: 900; font-size: .7rem; color: var(--accent); font-family: 'Outfit',sans-serif; }
+.pass-logo-name { font-family: 'Outfit',sans-serif; font-weight: 800; font-size: .9rem; }
+.pass-nfc { width: 22px; height: 22px; opacity: .6; }
+
+.pass-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.pass-field label { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; opacity: .6; display: block; margin-bottom: 2px; }
+.pass-field .val { font-family: 'Outfit',sans-serif; font-weight: 800; font-size: 1.3rem; line-height: 1; }
+.pass-field .val.sm { font-size: .9rem; }
+
+.pass-barcode { display: flex; justify-content: center; padding: 10px; background: white; border-radius: 10px; }
+.pass-qr { width: 64px; height: 64px; }
+
+/* Add to Wallet buttons (official style) */
+.add-wallet-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 10px; cursor: pointer; border: none;
+  font-weight: 700; font-size: .85rem; transition: all .2s; padding: 10px 18px;
+  font-family: 'Outfit',sans-serif;
+}
+.add-apple-btn {
+  background: #000; color: white;
+}
+.add-apple-btn:hover { background: #1a1a1a; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+.add-google-btn {
+  background: white; color: #1a73e8;
+  border: 1.5px solid #dadce0 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+.add-google-btn:hover { box-shadow: 0 4px 12px rgba(0,0,0,.15); transform: translateY(-1px); }
+
+/* Wallet config panel */
+.wallet-config { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+.config-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 20px; }
+.config-card-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.config-icon { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; font-size: 1.1rem; flex-shrink: 0; }
+.config-icon.apple { background: #000; color: white; }
+.config-icon.google { background: #4285f4; color: white; }
+.config-name { font-size: .95rem; font-weight: 700; }
+.config-status { font-size: .72rem; color: var(--muted); }
+
+/* Google Wallet specific */
+.gw-checklist-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);font-size:.78rem;line-height:1.5;color:var(--text)}
+.gw-checklist-item.pending{background:#fafafa;color:var(--text2)}
+.gw-checklist-item.done{background:#f0fdf4;border-color:#a7f3d0;color:var(--text)}
+.gw-checklist-item.error{background:#fef2f2;border-color:#fca5a5}
+.gw-check-icon{font-size:1rem;flex-shrink:0;width:18px;text-align:center;margin-top:1px;color:var(--muted)}
+.gw-save-btn{display:inline-flex;align-items:center;gap:9px;padding:11px 20px;border-radius:11px;background:#1a73e8;color:white;font-family:'Outfit',sans-serif;font-weight:700;font-size:.88rem;border:none;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(26,115,232,.3);text-decoration:none}
+.gw-save-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(26,115,232,.45)}
+.gw-link-row{display:flex;gap:8px;align-items:center;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;overflow:hidden}
+.gw-link-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Courier New',monospace;font-size:.72rem;color:var(--text2)}
+.gw-modal-inner{animation:fadeUp .25s ease}
+
+.status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; }
+.status-dot.active { background: var(--success); }
+.status-dot.inactive { background: var(--muted); }
+.status-dot.warn { background: var(--warn); }
+
+/* Pass list */
+.pass-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 16px; }
+.pass-item {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r);
+  padding: 16px; display: flex; gap: 14px; align-items: center;
+  transition: box-shadow .2s; cursor: pointer;
+}
+.pass-item:hover { box-shadow: var(--sh-md); }
+.pass-thumb { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem; flex-shrink: 0; }
+.pass-item-name { font-size: .88rem; font-weight: 700; }
+.pass-item-sub { font-size: .75rem; color: var(--text2); margin-top: 2px; }
+
+/* Code block */
+.code-block {
+  background: #18172e; color: #c9d1d9; border-radius: var(--r);
+  padding: 18px; font-family: 'Courier New', monospace; font-size: .78rem;
+  line-height: 1.6; overflow-x: auto; margin-top: 10px;
+  border: 1.5px solid rgba(255,255,255,.07);
+}
+.code-block .k { color: #ff79c6; }
+.code-block .s { color: #f1fa8c; }
+.code-block .c { color: #6272a4; }
+.code-block .f { color: #50fa7b; }
+.code-block .v { color: #bd93f9; }
+
+/* Tab system */
+.tabs { display: flex; gap: 4px; background: var(--surface2); padding: 4px; border-radius: 10px; margin-bottom: 20px; }
+.tab-btn { flex: 1; padding: 8px 14px; border-radius: 8px; border: none; background: none; cursor: pointer; font-size: .83rem; font-weight: 600; color: var(--text2); transition: all .15s; font-family: 'Outfit',sans-serif; }
+.tab-btn.active { background: white; color: var(--accent); box-shadow: var(--sh); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Wallet stats mini */
+.wallet-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+
+/* Step indicator */
+.steps { display: flex; align-items: center; gap: 0; margin-bottom: 24px; }
+.step { display: flex; align-items: center; gap: 8px; flex: 1; }
+.step-num { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: .75rem; font-weight: 800; flex-shrink: 0; font-family: 'Outfit',sans-serif; }
+.step-num.done { background: var(--success); color: white; }
+.step-num.active { background: var(--accent); color: white; }
+.step-num.todo { background: var(--surface2); color: var(--muted); border: 1.5px solid var(--border); }
+.step-line { flex: 1; height: 2px; background: var(--border); margin: 0 8px; }
+.step-line.done { background: var(--success); }
+.step-label { font-size: .72rem; font-weight: 600; color: var(--text2); }
+
+/* Notif banner */
+.notif-banner { border-radius: var(--r); padding: 14px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border: 1.5px solid; }
+.notif-banner.info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+.notif-banner.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.notif-banner.success { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+.notif-banner-icon { font-size: 1.2rem; flex-shrink: 0; }
+.notif-banner-text { font-size: .83rem; font-weight: 600; }
+
+/* Divider */
+.divider { border: none; border-top: 1.5px solid var(--border); margin: 20px 0; }
+
+/* Wallet type selector */
+.wallet-type-selector { display: flex; gap: 10px; margin-bottom: 18px; }
+.wallet-type-btn {
+  flex: 1; padding: 14px; border-radius: var(--r); border: 2px solid var(--border);
+  background: var(--surface); cursor: pointer; transition: all .15s; text-align: center;
+}
+.wallet-type-btn:hover { border-color: var(--accent-l); }
+.wallet-type-btn.selected { border-color: var(--accent); background: var(--accent-dim); }
+.wallet-type-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.wallet-type-label { font-size: .8rem; font-weight: 700; color: var(--text); font-family: 'Outfit',sans-serif; }
+.wallet-type-sub { font-size: .68rem; color: var(--muted); }
+
+/* ══════════════════════════════════════════
+   MOBILE TOP BAR
+══════════════════════════════════════════ */
+.mobile-topbar {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: var(--surface);
+  border-bottom: 1.5px solid var(--border);
+  padding: 0 16px;
+  height: 56px;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 18px 48px;
-  background: rgba(6,6,15,0.85);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
 }
-
-.logo {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(135deg, #a78bfa, #22d3ee);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-decoration: none;
+.mobile-topbar-logo { display: flex; align-items: center; gap: 9px; }
+.mobile-topbar-logo .s-logo-mark { width: 30px; height: 30px; font-size: .8rem; }
+.mobile-topbar-logo .s-logo-txt { font-size: .95rem; }
+.mobile-topbar-actions { display: flex; align-items: center; gap: 8px; }
+.topbar-icon-btn {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--surface2); border: none; cursor: pointer;
+  display: grid; place-items: center; color: var(--text2);
+  transition: all .15s;
 }
+.topbar-icon-btn:hover, .topbar-icon-btn:active { background: var(--border); color: var(--text); }
+.topbar-icon-btn svg { width: 18px; height: 18px; }
 
-.nav-links { display: flex; gap: 8px; list-style: none; align-items: center; }
-
-.nav-links a {
-  color: var(--muted2);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.2s;
+/* ══════════════════════════════════════════
+   SIDEBAR DRAWER OVERLAY
+══════════════════════════════════════════ */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 150;
+  background: rgba(15,12,50,.4);
+  backdrop-filter: blur(4px);
+  animation: fadeIn .2s;
 }
+.sidebar-overlay.open { display: block; }
+.sidebar.drawer-open { transform: translateX(0) !important; box-shadow: 0 0 60px rgba(0,0,0,.25); }
 
-.nav-links a:hover { color: var(--text); background: var(--surface2); }
-
-.nav-cta {
-  background: var(--violet) !important;
-  color: #fff !important;
-  font-weight: 700 !important;
-  box-shadow: 0 0 24px rgba(124,92,252,0.4);
-}
-
-.nav-cta:hover { background: #9070ff !important; box-shadow: 0 0 32px rgba(124,92,252,0.6) !important; }
-
-/* HERO */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px 48px 80px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  width: 800px; height: 800px;
-  background: radial-gradient(circle, rgba(124,92,252,0.12) 0%, transparent 65%);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 65%);
-  top: 20%; right: -10%;
-}
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--surface2);
-  border: 1px solid rgba(124,92,252,0.3);
-  border-radius: 100px;
-  padding: 6px 16px 6px 8px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--violet-light);
-  margin-bottom: 32px;
-  position: relative;
-  z-index: 2;
-  animation: fadeDown 0.6s ease forwards;
-}
-
-.badge-dot {
-  width: 22px; height: 22px;
-  background: linear-gradient(135deg, var(--violet), var(--cyan));
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px;
-}
-
-h1 {
-  font-size: clamp(48px, 6vw, 88px);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  position: relative;
-  z-index: 2;
-  animation: fadeUp 0.7s 0.1s ease both;
-}
-
-.grad {
-  background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero-sub {
-  max-width: 560px;
-  color: var(--muted2);
-  font-size: 17px;
-  line-height: 1.7;
-  margin: 24px auto 40px;
-  position: relative;
-  z-index: 2;
-  animation: fadeUp 0.7s 0.2s ease both;
-}
-
-.hero-actions {
-  display: flex; gap: 12px; justify-content: center;
-  position: relative; z-index: 2;
-  animation: fadeUp 0.7s 0.3s ease both;
-}
-
-.btn-main {
-  background: linear-gradient(135deg, var(--violet), #5b21b6);
-  color: #fff;
-  padding: 14px 32px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 30px rgba(124,92,252,0.4);
-  transition: all 0.2s;
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: inherit;
-}
-
-.btn-main:hover { transform: translateY(-2px); box-shadow: 0 0 48px rgba(124,92,252,0.6); }
-
-.btn-outline {
-  background: var(--surface2);
-  color: var(--text);
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid var(--border2);
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: inherit;
-}
-
-.btn-outline:hover { background: var(--surface3); border-color: rgba(255,255,255,0.2); }
-
-.hero-stats {
-  display: flex;
-  margin-top: 72px;
+/* ══════════════════════════════════════════
+   MOBILE BOTTOM NAV
+══════════════════════════════════════════ */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
   background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative; z-index: 2;
-  animation: fadeUp 0.7s 0.4s ease both;
+  border-top: 1.5px solid var(--border);
+  padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+  gap: 0;
+}
+.bottom-nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px; padding: 6px 4px;
+  border: none; background: none; cursor: pointer;
+  color: var(--muted); transition: color .15s;
+  font-family: 'Outfit', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav-item.active { color: var(--accent); }
+.bottom-nav-item svg { width: 21px; height: 21px; flex-shrink: 0; }
+.bottom-nav-label { font-size: .58rem; font-weight: 700; letter-spacing: .2px; white-space: nowrap; }
+.bottom-nav-dot {
+  position: absolute; top: 4px; right: calc(50% - 14px);
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--surface);
 }
 
-.stat-item { padding: 24px 48px; text-align: center; border-right: 1px solid var(--border); flex: 1; }
-.stat-item:last-child { border-right: none; }
+/* ══════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Show mobile UI */
+  .mobile-topbar { display: flex; }
+  .mobile-bottom-nav { display: flex; }
 
-.stat-val {
-  font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
-  background: linear-gradient(135deg, #a78bfa, #22d3ee);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  display: block;
+  /* Hide desktop sidebar */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+    z-index: 300;
+  }
+
+  /* Main adjustments */
+  .main {
+    margin-left: 0;
+    padding-top: 56px;   /* topbar height */
+    padding-bottom: 72px; /* bottom nav + safe area */
+  }
+
+  /* Page header */
+  .p-header { padding: 20px 16px 0; gap: 10px; }
+  .p-title { font-size: 1.25rem; }
+  .p-body { padding: 16px 16px 32px; }
+
+  /* Stats: 2 cols on mobile */
+  .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat-val { font-size: 1.7rem; }
+  .stat-icon { width: 34px; height: 34px; font-size: .95rem; }
+
+  /* Wallet stats: 2 cols */
+  .wallet-stat-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+  /* All 2-col grids go single col */
+  .grid-2 { grid-template-columns: 1fr; }
+  .wallet-config { grid-template-columns: 1fr; }
+  .input-row { grid-template-columns: 1fr 1fr; } /* keep 2 col for small inputs */
+
+  /* Cards */
+  .card { padding: 16px; border-radius: 12px; }
+  .modal { border-radius: 20px 20px 0 0; max-height: 92vh; margin: auto 0 0; padding: 20px 18px 28px; }
+  .overlay { align-items: flex-end; padding: 0; }
+
+  /* Table: horizontal scroll with sticky first col */
+  .tbl-wrap { border-radius: 10px; }
+  thead th { font-size: .65rem; padding: 7px 10px; }
+  tbody td { padding: 10px 10px; font-size: .8rem; }
+  /* Hide less critical columns on mobile */
+  .tbl-hide-mobile { display: none; }
+
+  /* Pass preview */
+  .pass-fields { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Wallet type selector */
+  .wallet-type-selector { gap: 8px; }
+  .wallet-type-btn { padding: 11px 8px; }
+  .wallet-type-icon { font-size: 1.4rem; margin-bottom: 4px; }
+
+  /* Buttons: full width in header */
+  .p-header .btn { padding: 8px 14px; font-size: .78rem; }
+
+  /* Code block: smaller font */
+  .code-block { font-size: .7rem; padding: 14px; }
+
+  /* Config cards: full width */
+  .config-card { border-radius: 12px; }
+
+  /* Hide section labels in sidebar on mobile */
+  .s-section { display: none; }
+
+  /* Toasts at bottom but above bottom nav */
+  .toast-container { bottom: 84px; right: 12px; left: 12px; }
+  .toast { min-width: unset; width: 100%; font-size: .82rem; }
 }
 
-.stat-lbl { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+@media (max-width: 480px) {
+  /* Single col stats on very small screens */
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .wallet-stat-row { grid-template-columns: repeat(2, 1fr); }
 
-/* SECTION */
-.section { padding: 96px 80px; }
+  /* Shrink padding even more */
+  .p-body { padding: 12px 12px 28px; }
+  .p-header { padding: 16px 12px 0; }
+  .card { padding: 14px; }
 
-.eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--violet-light); margin-bottom: 16px;
+  /* Smaller title */
+  .p-title { font-size: 1.1rem; }
+
+  /* Full-width header button */
+  .p-header { flex-direction: column; align-items: stretch; }
+  .p-header > div:last-child { display: flex; }
+  .p-header .btn { justify-content: center; }
+
+  /* Modal */
+  .modal { padding: 18px 14px 24px; }
+  .modal-title { font-size: 1rem; }
+
+  /* Wallet type selector: vertical on tiny screens */
+  .wallet-type-selector { flex-direction: row; }
+  .wallet-type-btn { padding: 10px 6px; }
+  .wallet-type-icon { font-size: 1.2rem; }
+  .wallet-type-sub { display: none; }
+
+  /* Input row: single col on tiny screens */
+  .input-row { grid-template-columns: 1fr; }
 }
 
-.eyebrow::before { content: ''; width: 20px; height: 2px; background: var(--violet); border-radius: 2px; }
-
-h2 { font-size: clamp(28px, 3vw, 44px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
-
-/* FILTERS */
-.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
-
-.filter-btn {
-  padding: 8px 18px; border-radius: 100px;
-  border: 1px solid var(--border2); background: var(--surface);
-  color: var(--muted2); font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; font-family: inherit;
+/* Pull-to-show drag handle on bottom sheets */
+.modal-drag-handle {
+  width: 40px; height: 4px;
+  background: var(--border); border-radius: 100px;
+  margin: 0 auto 18px;
 }
 
-.filter-btn:hover { border-color: rgba(124,92,252,0.4); color: var(--violet-light); }
-.filter-btn.active { background: rgba(124,92,252,0.15); border-color: rgba(124,92,252,0.5); color: var(--violet-light); }
-
-/* CARDS */
-.listings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-
-.card {
+/* Mobile client cards (replaces table rows on mobile) */
+.mobile-client-card {
+  display: none;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  overflow: hidden;
-  transition: all 0.3s;
-  cursor: pointer;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  animation: fadeUp .2s ease;
+}
+.mobile-client-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.mobile-client-card-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.mobile-client-card-actions { display: flex; gap: 7px; }
+.mobile-client-card-actions .btn { flex: 1; justify-content: center; font-size: .78rem; }
+
+@media (max-width: 600px) {
+  /* Switch from table to cards for clients */
+  #clients-table-wrap { display: none; }
+  #clients-cards-wrap { display: block; }
+  .mobile-client-card { display: block; }
 }
 
-.card:hover {
-  border-color: rgba(124,92,252,0.4);
-  transform: translateY(-4px);
-  box-shadow: 0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,92,252,0.2);
-}
-
-.card-thumb {
-  width: 100%; aspect-ratio: 16/9;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 40px; position: relative;
-}
-
-.card-thumb::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, var(--surface));
-}
-
-.card-body { padding: 20px; }
-.card-badges { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-
-.tag { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
-.tag-v { background: rgba(124,92,252,0.15); color: var(--violet-light); }
-.tag-c { background: rgba(34,211,238,0.12); color: var(--cyan); }
-.tag-g { background: rgba(74,222,128,0.12); color: var(--green); }
-.tag-p { background: rgba(244,114,182,0.12); color: var(--pink); }
-.tag-o { background: rgba(251,146,60,0.12); color: var(--orange); }
-.tag-ok { background: rgba(74,222,128,0.1); color: var(--green); }
-
-.card-name { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
-.card-url { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
-.card-desc { font-size: 12px; line-height: 1.65; color: var(--muted2); margin-bottom: 16px; }
-
-.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
-
-.mbox { background: var(--surface2); border-radius: 10px; padding: 10px 8px; text-align: center; }
-.mval { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; display: block; }
-.mval.green { color: var(--green); }
-.mval.violet { color: var(--violet-light); }
-.mval.cyan { color: var(--cyan); }
-.mlbl { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; display: block; }
-
-.card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); }
-
-.card-price {
-  font-size: 26px; font-weight: 800; letter-spacing: -0.03em;
-  background: linear-gradient(135deg, #a78bfa, #22d3ee);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-
-.card-price-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-.btn-sm {
-  padding: 10px 18px; border-radius: 10px;
-  background: rgba(124,92,252,0.12); border: 1px solid rgba(124,92,252,0.3);
-  color: var(--violet-light); font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s; text-decoration: none;
-  display: inline-block; font-family: inherit;
-}
-.btn-sm:hover { background: rgba(124,92,252,0.25); }
-
-/* FEATURED */
-.featured-wrap {
-  background: linear-gradient(135deg, var(--surface2), #1a1040);
-  border: 1px solid rgba(124,92,252,0.25);
-  border-radius: 24px;
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  overflow: hidden;
-  margin-bottom: 48px;
-  position: relative;
-}
-
-.featured-wrap::before {
-  content: '';
-  position: absolute;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(124,92,252,0.12), transparent 70%);
-  top: -100px; left: -100px;
-}
-
-.f-left {
-  padding: 56px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  position: relative; z-index: 1;
-}
-
-.f-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3);
-  border-radius: 100px; padding: 5px 14px;
-  font-size: 11px; font-weight: 700; color: #fbbf24;
-  width: fit-content; margin-bottom: 24px;
-}
-
-.f-name { font-size: 44px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
-.f-url { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
-.f-desc { color: var(--muted2); font-size: 13px; line-height: 1.7; margin-bottom: 32px; max-width: 360px; }
-.f-price { font-size: 56px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 6px; }
-.f-price-note { color: var(--muted); font-size: 12px; margin-bottom: 28px; }
-
-.f-right {
-  padding: 48px;
-  border-left: 1px solid rgba(255,255,255,0.05);
-  display: flex; flex-direction: column; justify-content: center; gap: 16px;
-}
-
-.fm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-.fm {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 14px; padding: 20px;
-}
-
-.fm-val { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; display: block; margin-bottom: 4px; }
-.fm-lbl { font-size: 11px; color: var(--muted); }
-
-.chart-box {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border); border-radius: 14px; padding: 20px;
-}
-.chart-title { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
-.chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 56px; }
-.bar { flex: 1; border-radius: 4px 4px 0 0; }
-
-/* PROCESS */
-.process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-
-.process-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 20px; padding: 32px 28px;
-  position: relative; overflow: hidden; transition: all 0.3s;
-}
-
-.process-card:hover { border-color: rgba(124,92,252,0.35); background: var(--surface2); }
-
-.process-card::before {
-  content: attr(data-num);
-  position: absolute; top: -10px; right: 16px;
-  font-size: 80px; font-weight: 800;
-  color: rgba(255,255,255,0.03); letter-spacing: -0.05em;
-}
-
-.p-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
-.p-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
-.p-desc { font-size: 12px; color: var(--muted2); line-height: 1.65; }
-
-/* PRICING */
-.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-
-.price-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 24px; padding: 40px 32px;
-  position: relative; transition: all 0.3s;
-}
-
-.price-card:hover { transform: translateY(-4px); }
-
-.price-card.pop {
-  background: linear-gradient(135deg, #1a1040, #0d0d2f);
-  border-color: rgba(124,92,252,0.4);
-  box-shadow: 0 0 60px rgba(124,92,252,0.15);
-}
-
-.pop-badge {
-  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--violet), #5b21b6);
-  color: #fff; font-size: 11px; font-weight: 700;
-  padding: 5px 18px; border-radius: 0 0 12px 12px; white-space: nowrap;
-}
-
-.price-name { font-size: 14px; font-weight: 700; color: var(--muted2); margin-bottom: 16px; letter-spacing: 0.05em; text-transform: uppercase; }
-.price-amount { font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 4px; }
-.price-period { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
-
-.price-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
-
-.price-features li { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--muted2); line-height: 1.4; }
-
-.chk {
-  flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
-  background: rgba(74,222,128,0.15); color: var(--green);
-  font-size: 10px; display: flex; align-items: center; justify-content: center; margin-top: 1px;
-}
-
-.btn-price {
-  width: 100%; padding: 14px; border-radius: 12px;
-  font-size: 14px; font-weight: 700; cursor: pointer;
-  transition: all 0.2s; font-family: inherit; border: none;
-}
-
-.btn-price-main {
-  background: linear-gradient(135deg, var(--violet), #5b21b6);
-  color: #fff; box-shadow: 0 8px 24px rgba(124,92,252,0.35);
-}
-.btn-price-main:hover { box-shadow: 0 12px 32px rgba(124,92,252,0.5); transform: translateY(-1px); }
-
-.btn-price-out {
-  background: var(--surface2); color: var(--text);
-  border: 1px solid var(--border2);
-}
-.btn-price-out:hover { background: var(--surface3); }
-
-/* SELL */
-.sell-cta {
-  background: linear-gradient(135deg, var(--surface2), #100f30);
-  border: 1px solid rgba(124,92,252,0.2);
-  border-radius: 24px; padding: 80px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
-  align-items: center; position: relative; overflow: hidden;
-}
-
-.sell-cta::before {
-  content: '';
-  position: absolute; width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(124,92,252,0.1), transparent 70%);
-  bottom: -200px; right: -100px;
-}
-
-.perks { list-style: none; display: flex; flex-direction: column; gap: 14px; margin: 24px 0 36px; }
-
-.perks li { display: flex; gap: 12px; align-items: center; font-size: 14px; font-weight: 500; }
-
-.picon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-
-.sell-form { background: rgba(255,255,255,0.04); border: 1px solid var(--border2); border-radius: 20px; padding: 32px; position: relative; z-index: 1; }
-
-.form-title { font-size: 18px; font-weight: 700; margin-bottom: 24px; }
-
-.igroup { margin-bottom: 16px; }
-.ilabel { font-size: 12px; font-weight: 600; color: var(--muted2); margin-bottom: 8px; display: block; }
-
-.ifield {
-  width: 100%; background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 12px; padding: 12px 16px; color: var(--text);
-  font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s;
-}
-.ifield:focus { border-color: rgba(124,92,252,0.5); }
-.ifield::placeholder { color: var(--muted); }
-.irow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-footer {
-  border-top: 1px solid var(--border); padding: 48px 80px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-
-.flinks { display: flex; gap: 24px; list-style: none; }
-.flinks a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
-.flinks a:hover { color: var(--text); }
-.fcopy { color: var(--muted); font-size: 12px; }
-
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
-
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; }
-.d4 { transition-delay: 0.4s; } .d5 { transition-delay: 0.5s; } .d6 { transition-delay: 0.6s; }
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--violet); border-radius: 2px; }
 </style>
 </head>
 <body>
+<div id="app">
 
-<nav>
-  <a href="#" class="logo">Digital Wave</a>
-  <ul class="nav-links">
-    <li><a href="#acheter">Acheter</a></li>
-    <li><a href="#vendre">Vendre</a></li>
-    <li><a href="#tarifs">Tarifs</a></li>
-    <li><a href="#vendre" class="nav-cta">Déposer mon site</a></li>
-  </ul>
+<!-- MOBILE TOP BAR -->
+<div class="mobile-topbar">
+  <div class="mobile-topbar-logo">
+    <div class="s-logo-mark">LP</div>
+    <span class="s-logo-txt">LoyalPass</span>
+  </div>
+  <div class="mobile-topbar-actions">
+    <button class="topbar-icon-btn" onclick="openModal('modal-emit-pass')" title="Émettre un pass">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="topbar-icon-btn" id="mobile-menu-btn" onclick="toggleSidebar()" title="Menu">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- SIDEBAR DRAWER OVERLAY -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="s-logo">
+    <div class="s-logo-mark">LP</div>
+    <span class="s-logo-txt">LoyalPass</span>
+  </div>
+  <nav class="s-nav">
+    <div class="s-section">Principal</div>
+    <button class="nav-item active" onclick="showScreen('dashboard', this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Tableau de bord
+    </button>
+    <button class="nav-item" onclick="showScreen('clients', this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Clients
+    </button>
+    <button class="nav-item" onclick="showScreen('programmes', this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Programmes
+    </button>
+
+    <div class="s-section">Wallet</div>
+    <button class="nav-item" onclick="showScreen('wallet', this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Passes Wallet
+      <span class="badge b-purple" style="margin-left:auto;padding:2px 7px;font-size:.6rem;">NEW</span>
+    </button>
+    <button class="nav-item" onclick="showScreen('wallet-config', this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Configuration API
+    </button>
+
+    <div class="s-section">Outils</div>
+    <button class="nav-item" onclick="showScreen('campagnes', this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Campagnes
+    </button>
+    <button class="nav-item" onclick="showScreen('parametres', this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      Paramètres
+    </button>
+  </nav>
+  <div class="s-footer">
+    <div class="merchant-chip">
+      <div class="m-avatar" style="background:linear-gradient(135deg,#5b4ef0,#7c74f5)">JD</div>
+      <div>
+        <div class="m-name">Jean Dupont</div>
+        <div class="m-role">Admin · Pro</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+  <button class="bottom-nav-item active" id="bn-dashboard" onclick="showScreen('dashboard', this); setBottomNav('bn-dashboard')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <span class="bottom-nav-label">Accueil</span>
+  </button>
+  <button class="bottom-nav-item" id="bn-clients" onclick="showScreen('clients', this); setBottomNav('bn-clients')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span class="bottom-nav-label">Clients</span>
+  </button>
+  <button class="bottom-nav-item" style="position:relative;" id="bn-wallet" onclick="showScreen('wallet', this); setBottomNav('bn-wallet')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    <span class="bottom-nav-label">Wallet</span>
+    <span class="bottom-nav-dot"></span>
+  </button>
+  <button class="bottom-nav-item" id="bn-campagnes" onclick="showScreen('campagnes', this); setBottomNav('bn-campagnes')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    <span class="bottom-nav-label">Campagnes</span>
+  </button>
+  <button class="bottom-nav-item" id="bn-parametres" onclick="showScreen('parametres', this); setBottomNav('bn-parametres')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    <span class="bottom-nav-label">Paramètres</span>
+  </button>
 </nav>
+<main class="main">
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge"><span class="badge-dot">⚡</span>La marketplace #1 des sites web rentables en France</div>
-  <h1>Achetez & vendez<br>des sites <span class="grad">en quelques clics</span></h1>
-  <p class="hero-sub">Des sites web vérifiés, des données transparentes et des transactions 100% sécurisées. Trouvez votre prochain business digital dès aujourd'hui.</p>
-  <div class="hero-actions">
-    <a href="#acheter" class="btn-main">🔍 Explorer les sites</a>
-    <a href="#vendre" class="btn-outline">💰 Vendre mon site</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat-item"><span class="stat-val">847</span><span class="stat-lbl">Sites disponibles</span></div>
-    <div class="stat-item"><span class="stat-val">2.4M€</span><span class="stat-lbl">Volume de ventes</span></div>
-    <div class="stat-item"><span class="stat-val">12K+</span><span class="stat-lbl">Acheteurs inscrits</span></div>
-    <div class="stat-item"><span class="stat-val">21 j</span><span class="stat-lbl">Délai moyen de vente</span></div>
-  </div>
-</section>
-
-<!-- LISTINGS -->
-<section class="section" id="acheter">
-  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;">
-    <div><p class="eyebrow">Catalogue</p><h2>Sites <span class="grad">disponibles</span></h2></div>
-    <a href="#" class="btn-outline" style="font-size:13px;">Voir les 847 sites →</a>
-  </div>
-
-  <!-- Featured -->
-  <div class="featured-wrap reveal">
-    <div class="f-left">
+  <!-- ═══════════════════════════════════════════════ DASHBOARD -->
+  <div id="screen-dashboard" class="screen active">
+    <div class="p-header">
       <div>
-        <div class="f-badge">⭐ Coup de cœur de la semaine</div>
-        <div class="f-name">FormaPro.io</div>
-        <div class="f-url">formapro.io · Plateforme SaaS</div>
-        <p class="f-desc">Plateforme de formation B2B avec 1 200 abonnés actifs. Revenus stables depuis 18 mois, churn &lt; 2%, stack Next.js + Stripe.</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;">
-          <span class="tag tag-v">SaaS</span>
-          <span class="tag tag-ok">✓ Vérifié</span>
-          <span class="tag tag-c">Prix négociable</span>
+        <div class="p-title">Tableau de bord</div>
+        <div class="p-sub">Bonjour Jean 👋 — voici vos stats du jour</div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="showScreen('wallet', document.querySelector('[onclick*=wallet]'))">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Émettre un Pass
+      </button>
+    </div>
+    <div class="p-body">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#ede9fe">🧑‍🤝‍🧑</div>
+          <div class="stat-val">2 847</div>
+          <div class="stat-lbl">Membres actifs</div>
+          <div class="stat-trend">↑ +12% ce mois</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#d1fae5">🎫</div>
+          <div class="stat-val">1 204</div>
+          <div class="stat-lbl">Passes générés</div>
+          <div class="stat-trend">↑ +34% ce mois</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef3c7">⭐</div>
+          <div class="stat-val">94 820</div>
+          <div class="stat-lbl">Points distribués</div>
+          <div class="stat-trend">↑ +8% ce mois</div>
         </div>
       </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Nouveaux membres</div>
+          <div class="card-sub">6 derniers mois</div>
+          <div class="chart-wrap">
+            <div class="chart-bars" id="mainChart"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Passes Wallet émis</div>
+          <div class="card-sub">Répartition Apple / Google</div>
+          <div style="margin-top:18px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:11px;height:11px;border-radius:3px;background:#000"></div><span style="font-size:.82rem;">Apple Wallet</span></div>
+              <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:.9rem;">724</span>
+            </div>
+            <div class="prog-wrap"><div class="prog-bar" style="width:60%;background:linear-gradient(90deg,#000,#333)"></div></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px;">
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:11px;height:11px;border-radius:3px;background:#4285f4"></div><span style="font-size:.82rem;">Google Wallet</span></div>
+              <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:.9rem;">480</span>
+            </div>
+            <div class="prog-wrap"><div class="prog-bar" style="width:40%;background:linear-gradient(90deg,#4285f4,#34a853)"></div></div>
+
+            <hr class="divider">
+            <div style="font-size:.78rem;color:var(--text2);text-align:center;">
+              <span style="font-weight:700;color:var(--text)">1 204</span> passes actifs · Taux d'adoption <span style="font-weight:700;color:var(--accent)">42%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div class="card-title">Dernières activités</div>
+            <div class="card-sub">Transactions et passes récents</div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Client</th><th>Action</th><th>Points</th><th>Pass</th><th>Date</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#5b4ef0;">MA</div>Marie A.</div></td>
+                <td><span class="badge b-green">Achat</span></td>
+                <td>+120 pts</td>
+                <td><span class="badge b-gray">🍎 Apple</span></td>
+                <td style="color:var(--muted);font-size:.78rem;">Il y a 5 min</td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#10b981;">TL</div>Thomas L.</div></td>
+                <td><span class="badge b-purple">Pass généré</span></td>
+                <td>—</td>
+                <td><span class="badge b-blue">🤖 Google</span></td>
+                <td style="color:var(--muted);font-size:.78rem;">Il y a 22 min</td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#f59e0b;">SB</div>Sophie B.</div></td>
+                <td><span class="badge b-yellow">Mise à jour</span></td>
+                <td>+75 pts</td>
+                <td><span class="badge b-gray">🍎 Apple</span></td>
+                <td style="color:var(--muted);font-size:.78rem;">Il y a 1h</td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#ef4444;">KM</div>Karim M.</div></td>
+                <td><span class="badge b-green">Achat</span></td>
+                <td>+200 pts</td>
+                <td><span class="badge b-blue">🤖 Google</span></td>
+                <td style="color:var(--muted);font-size:.78rem;">Il y a 2h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ CLIENTS -->
+  <div id="screen-clients" class="screen">
+    <div class="p-header">
       <div>
-        <div class="f-price grad">99 €</div>
-        <div class="f-price-note">Frais d'annonce Premium · revenus du site : 8 900 €/mois</div>
-        <a href="#" class="btn-main" style="width:fit-content;">Voir l'annonce complète →</a>
+        <div class="p-title">Clients</div>
+        <div class="p-sub">Gérez vos membres et émettez leurs passes wallet</div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="openModal('modal-add-client')">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nouveau client
+      </button>
+    </div>
+    <div class="p-body">
+      <div class="notif-banner info">
+        <div class="notif-banner-icon">💡</div>
+        <div class="notif-banner-text">Cliquez sur les boutons Wallet pour générer et envoyer un pass directement à votre client.</div>
+      </div>
+      <div class="card">
+        <!-- Desktop table -->
+        <div id="clients-table-wrap" class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th><th>Points</th><th>Niveau</th><th class="tbl-hide-mobile">Passes</th><th class="tbl-hide-mobile">Dernière visite</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="clientsTable"></tbody>
+          </table>
+        </div>
+        <!-- Mobile cards -->
+        <div id="clients-cards-wrap" style="display:none;"></div>
       </div>
     </div>
-    <div class="f-right">
-      <div class="fm-grid">
-        <div class="fm"><span class="fm-val grad" style="-webkit-text-fill-color:transparent;">8 900€</span><span class="fm-lbl">Revenus/mois</span></div>
-        <div class="fm"><span class="fm-val" style="color:var(--green);">1 240</span><span class="fm-lbl">Abonnés actifs</span></div>
-        <div class="fm"><span class="fm-val" style="color:var(--cyan);">1.8%</span><span class="fm-lbl">Churn mensuel</span></div>
-        <div class="fm"><span class="fm-val" style="color:var(--violet-light);">18 mois</span><span class="fm-lbl">Historique</span></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ PROGRAMMES -->
+  <div id="screen-programmes" class="screen">
+    <div class="p-header">
+      <div>
+        <div class="p-title">Programmes de fidélité</div>
+        <div class="p-sub">Configurez vos règles de points et récompenses</div>
       </div>
-      <div class="chart-box">
-        <div class="chart-title">Croissance revenus · 6 derniers mois</div>
-        <div class="chart-bars">
-          <div class="bar" style="height:45%;background:linear-gradient(to top,rgba(124,92,252,0.35),rgba(124,92,252,0.15));"></div>
-          <div class="bar" style="height:58%;background:linear-gradient(to top,rgba(124,92,252,0.45),rgba(124,92,252,0.2));"></div>
-          <div class="bar" style="height:68%;background:linear-gradient(to top,rgba(124,92,252,0.55),rgba(124,92,252,0.25));"></div>
-          <div class="bar" style="height:80%;background:linear-gradient(to top,rgba(124,92,252,0.7),rgba(124,92,252,0.35));"></div>
-          <div class="bar" style="height:90%;background:linear-gradient(to top,rgba(124,92,252,0.85),rgba(124,92,252,0.4));"></div>
-          <div class="bar" style="height:100%;background:linear-gradient(to top,#7c5cfc,#a78bfa);"></div>
+      <button class="btn btn-p btn-sm">+ Nouveau programme</button>
+    </div>
+    <div class="p-body">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-icon" style="background:#ede9fe">📦</div><div class="stat-val">3</div><div class="stat-lbl">Programmes actifs</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#d1fae5">🎁</div><div class="stat-val">18</div><div class="stat-lbl">Récompenses définies</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#fef3c7">🔄</div><div class="stat-val">94%</div><div class="stat-lbl">Taux de rétention</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Programmes actifs</div>
+        <div style="display:grid;gap:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1.5px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#5b4ef0,#7c74f5);display:grid;place-items:center;font-size:1.2rem;">⭐</div>
+              <div>
+                <div style="font-weight:700;font-size:.9rem;">Programme Gold</div>
+                <div style="font-size:.75rem;color:var(--text2);">1€ = 10 pts · Seuil 500 pts</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="badge b-green">Actif</span>
+              <button class="btn btn-s btn-sm">Modifier</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1.5px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#10b981,#34d399);display:grid;place-items:center;font-size:1.2rem;">💎</div>
+              <div>
+                <div style="font-weight:700;font-size:.9rem;">Programme Platinum</div>
+                <div style="font-size:.75rem;color:var(--text2);">1€ = 15 pts · Seuil 1500 pts</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="badge b-green">Actif</span>
+              <button class="btn btn-s btn-sm">Modifier</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="filters">
-    <button class="filter-btn active">Tous</button>
-    <button class="filter-btn">E-Commerce</button>
-    <button class="filter-btn">SaaS</button>
-    <button class="filter-btn">Blog / SEO</button>
-    <button class="filter-btn">Newsletter</button>
-    <button class="filter-btn">Marketplace</button>
-    <button class="filter-btn">49 € Starter</button>
-    <button class="filter-btn">79 € Pro</button>
-    <button class="filter-btn">99 € Premium</button>
+  <!-- ═══════════════════════════════════════════════ WALLET PASSES -->
+  <div id="screen-wallet" class="screen">
+    <div class="p-header">
+      <div>
+        <div class="p-title">Passes Wallet</div>
+        <div class="p-sub">Générez des cartes Apple Wallet &amp; Google Wallet pour vos clients</div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="openModal('modal-emit-pass')">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Émettre un Pass
+      </button>
+    </div>
+    <div class="p-body">
+
+      <div class="wallet-stat-row">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#f0effe;">🎫</div>
+          <div class="stat-val">1 204</div>
+          <div class="stat-lbl">Total passes actifs</div>
+          <div class="stat-trend">↑ +34%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#000;border-radius:11px;font-size:1.1rem;">🍎</div>
+          <div class="stat-val" style="font-size:1.6rem;">724</div>
+          <div class="stat-lbl">Apple Wallet</div>
+          <div class="stat-trend">60%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dbeafe;">🤖</div>
+          <div class="stat-val" style="font-size:1.6rem;">480</div>
+          <div class="stat-lbl">Google Wallet</div>
+          <div class="stat-trend">40%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#d1fae5;">📡</div>
+          <div class="stat-val" style="font-size:1.6rem;">98%</div>
+          <div class="stat-lbl">Taux de livraison</div>
+          <div class="stat-trend" style="color:var(--success);">↑ +2%</div>
+        </div>
+      </div>
+
+      <!-- Pass preview section -->
+      <div class="grid-2" style="margin-bottom:20px;">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">Aperçu des passes</div>
+          <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('preview', 'apple-tab', this)">🍎 Apple Wallet</button>
+            <button class="tab-btn" onclick="switchTab('preview', 'google-tab', this)">🤖 Google Wallet</button>
+          </div>
+          <div id="apple-tab" class="tab-content active">
+            <div class="pass-preview apple">
+              <div class="pass-header">
+                <div class="pass-logo">
+                  <div class="pass-logo-dot">LP</div>
+                  <span class="pass-logo-name">LoyalPass</span>
+                </div>
+                <svg class="pass-nfc" fill="white" viewBox="0 0 24 24"><path d="M20.2 7.2C18.9 5.9 17.1 5 15 5V3c2.7 0 5.1 1.1 6.9 2.9L20.2 7.2zm-2.8 2.8c-.8-.8-1.9-1.3-3.1-1.3V7c1.7 0 3.3.7 4.4 1.8L17.4 10zM15 13c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0 5c-3.3 0-6-2.7-6-6H7c0 4.4 3.6 8 8 8v-2z"/></svg>
+              </div>
+              <div class="pass-fields">
+                <div class="pass-field">
+                  <label>Points</label>
+                  <div class="val">1 250</div>
+                </div>
+                <div class="pass-field">
+                  <label>Niveau</label>
+                  <div class="val sm">⭐ Gold</div>
+                </div>
+                <div class="pass-field">
+                  <label>Membre</label>
+                  <div class="val sm">Marie A.</div>
+                </div>
+                <div class="pass-field">
+                  <label>Valable jusqu'au</label>
+                  <div class="val sm">12/2025</div>
+                </div>
+              </div>
+              <div class="pass-barcode">
+                <svg class="pass-qr" viewBox="0 0 64 64" fill="#18172e">
+                  <rect x="0" y="0" width="20" height="20" rx="2"/><rect x="2" y="2" width="16" height="16" rx="1" fill="white"/><rect x="4" y="4" width="12" height="12" rx="1"/>
+                  <rect x="44" y="0" width="20" height="20" rx="2"/><rect x="46" y="2" width="16" height="16" rx="1" fill="white"/><rect x="48" y="4" width="12" height="12" rx="1"/>
+                  <rect x="0" y="44" width="20" height="20" rx="2"/><rect x="2" y="46" width="16" height="16" rx="1" fill="white"/><rect x="4" y="48" width="12" height="12" rx="1"/>
+                  <rect x="26" y="4" width="4" height="4"/><rect x="34" y="4" width="4" height="4"/><rect x="26" y="12" width="12" height="4"/><rect x="26" y="26" width="4" height="4"/><rect x="34" y="26" width="4" height="4"/><rect x="26" y="34" width="4" height="12"/><rect x="34" y="30" width="12" height="4"/><rect x="42" y="38" width="4" height="4"/><rect x="34" y="38" width="4" height="4"/><rect x="26" y="44" width="4" height="4"/><rect x="30" y="48" width="8" height="4"/><rect x="26" y="56" width="12" height="4"/><rect x="42" y="44" width="4" height="16"/><rect x="50" y="26" width="4" height="4"/><rect x="58" y="26" width="4" height="4"/><rect x="50" y="34" width="12" height="4"/><rect x="50" y="42" width="4" height="4"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div id="google-tab" class="tab-content">
+            <div class="pass-preview google">
+              <div class="pass-header">
+                <div class="pass-logo">
+                  <div class="pass-logo-dot">LP</div>
+                  <span class="pass-logo-name">LoyalPass</span>
+                </div>
+                <span style="font-size:.7rem;opacity:.7;background:rgba(255,255,255,.2);padding:3px 8px;border-radius:10px;font-weight:700;">FIDÉLITÉ</span>
+              </div>
+              <div class="pass-fields">
+                <div class="pass-field">
+                  <label>Solde Points</label>
+                  <div class="val">1 250 pts</div>
+                </div>
+                <div class="pass-field">
+                  <label>Tier</label>
+                  <div class="val sm">Gold Member</div>
+                </div>
+                <div class="pass-field">
+                  <label>Numéro de compte</label>
+                  <div class="val sm" style="font-size:.8rem;">#LP-2024-0042</div>
+                </div>
+                <div class="pass-field">
+                  <label>Titulaire</label>
+                  <div class="val sm">Marie A.</div>
+                </div>
+              </div>
+              <div class="pass-barcode">
+                <svg class="pass-qr" viewBox="0 0 64 64" fill="#1565c0">
+                  <rect x="0" y="0" width="20" height="20" rx="2"/><rect x="2" y="2" width="16" height="16" rx="1" fill="white"/><rect x="4" y="4" width="12" height="12" rx="1"/>
+                  <rect x="44" y="0" width="20" height="20" rx="2"/><rect x="46" y="2" width="16" height="16" rx="1" fill="white"/><rect x="48" y="4" width="12" height="12" rx="1"/>
+                  <rect x="0" y="44" width="20" height="20" rx="2"/><rect x="2" y="46" width="16" height="16" rx="1" fill="white"/><rect x="4" y="48" width="12" height="12" rx="1"/>
+                  <rect x="26" y="4" width="4" height="4"/><rect x="34" y="4" width="4" height="4"/><rect x="26" y="12" width="12" height="4"/><rect x="26" y="26" width="4" height="4"/><rect x="34" y="26" width="4" height="4"/><rect x="26" y="34" width="4" height="12"/><rect x="34" y="30" width="12" height="4"/><rect x="42" y="38" width="4" height="4"/><rect x="34" y="38" width="4" height="4"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">Émettre en masse</div>
+            <div class="card-sub" style="margin-bottom:14px;">Générez des passes pour tous vos clients actifs</div>
+            <div style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:14px;border:1.5px solid var(--border);">
+              <div style="font-size:.78rem;font-weight:700;margin-bottom:4px;">2 847 clients éligibles</div>
+              <div class="prog-wrap"><div class="prog-bar" style="width:0%;transition:width 1.5s ease;" id="bulkProg"></div></div>
+              <div style="font-size:.72rem;color:var(--muted);margin-top:4px;" id="bulkStatus">Prêt à générer</div>
+            </div>
+            <div style="display:grid;gap:8px;">
+              <button class="btn btn-s btn-sm" style="width:100%;justify-content:center;" onclick="simulateBulk('apple')">
+                🍎 Générer pour Apple Wallet
+              </button>
+              <button class="btn btn-s btn-sm" style="width:100%;justify-content:center;" onclick="simulateBulk('google')">
+                🤖 Générer pour Google Wallet
+              </button>
+              <button class="btn btn-p btn-sm" style="width:100%;justify-content:center;" onclick="simulateBulk('both')">
+                ⚡ Générer pour les deux
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="margin-bottom:8px;">Push update</div>
+            <div class="card-sub" style="margin-bottom:14px;">Mettez à jour les points en temps réel sur les passes existants</div>
+            <button class="btn btn-success btn-sm" style="width:100%;justify-content:center;" onclick="showToast('✅ Push envoyé à 1 204 passes !', 'success')">
+              📡 Envoyer mise à jour APNs / Google
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pass history table -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div>
+            <div class="card-title">Historique des passes</div>
+            <div class="card-sub">Tous les passes générés récemment</div>
+          </div>
+          <input type="text" placeholder="Rechercher un client..." style="width:200px;padding:7px 12px;font-size:.8rem;" oninput="filterPasses(this.value)">
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Client</th><th>Type</th><th>Statut</th><th>Points</th><th>Niveau</th><th>Lien / Pass ID</th><th>Généré le</th><th>Action</th></tr>
+            </thead>
+            <tbody id="passHistoryTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="listings-grid">
-    <div class="card reveal d1">
-      <div class="card-thumb" style="background:linear-gradient(135deg,#1a1a2e,#2d1b69);">🛍️</div>
-      <div class="card-body">
-        <div class="card-badges"><span class="tag tag-c">E-Commerce</span><span class="tag tag-ok">✓ Vérifié</span></div>
-        <div class="card-name">MaisonNature.fr</div>
-        <div class="card-url">maisonnature.fr</div>
-        <p class="card-desc">Boutique déco naturelle & éco-responsable. 4 200 clients actifs, 38% de retour client.</p>
-        <div class="metrics">
-          <div class="mbox"><span class="mval green">3 100€</span><span class="mlbl">Rev./mois</span></div>
-          <div class="mbox"><span class="mval">24 mois</span><span class="mlbl">Ancienneté</span></div>
-          <div class="mbox"><span class="mval violet">×2.8</span><span class="mlbl">Multiple</span></div>
+  <!-- ═══════════════════════════════════════════════ WALLET CONFIG -->
+  <div id="screen-wallet-config" class="screen">
+    <div class="p-header">
+      <div>
+        <div class="p-title">Configuration API Wallet</div>
+        <div class="p-sub">Connectez Apple PassKit et Google Wallet à LoyalPass</div>
+      </div>
+    </div>
+    <div class="p-body">
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num done">✓</div>
+          <div class="step-label">Compte créé</div>
+          <div class="step-line done"></div>
         </div>
-        <div class="card-footer">
-          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
-          <a href="#" class="btn-sm">Voir →</a>
+        <div class="step">
+          <div class="step-num active">2</div>
+          <div class="step-label">Config Apple</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step">
+          <div class="step-num todo">3</div>
+          <div class="step-label">Config Google</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step">
+          <div class="step-num todo">4</div>
+          <div class="step-label">Test d'envoi</div>
+        </div>
+      </div>
+
+      <div class="wallet-config">
+        <!-- Apple Config -->
+        <div class="config-card">
+          <div class="config-card-hd">
+            <div class="config-icon apple">
+              <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            </div>
+            <div>
+              <div class="config-name">Apple Wallet (PassKit)</div>
+              <div class="config-status"><span class="status-dot warn"></span>Certificat à configurer</div>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>Pass Type Identifier</label>
+            <input type="text" placeholder="pass.com.votreapp.loyalty" id="apple-pass-id">
+          </div>
+          <div class="fg">
+            <label>Team Identifier</label>
+            <input type="text" placeholder="XXXXXXXXXX" id="apple-team-id">
+          </div>
+          <div class="fg">
+            <label>Certificat .p12 (Base64)</label>
+            <textarea rows="3" placeholder="Collez votre certificat signerCert en Base64..." id="apple-cert"></textarea>
+          </div>
+          <div class="fg">
+            <label>Passphrase du certificat</label>
+            <input type="password" placeholder="••••••••" id="apple-pass">
+          </div>
+          <div class="fg">
+            <label>Organization Name</label>
+            <input type="text" placeholder="Votre enseigne" value="LoyalPass" id="apple-org">
+          </div>
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <button class="btn btn-s btn-sm" onclick="testConnection('apple')">🧪 Tester</button>
+            <button class="btn btn-p btn-sm" onclick="saveConfig('apple')">💾 Sauvegarder</button>
+          </div>
+
+          <hr class="divider">
+          <div style="font-size:.75rem;font-weight:700;color:var(--text2);margin-bottom:8px;">📦 Librairie Node.js</div>
+          <div class="code-block">
+<span class="c"># Installation</span>
+<span class="f">npm</span> install <span class="s">passkit-generator</span>
+
+<span class="c"># Endpoint Express généré</span>
+<span class="k">app</span>.<span class="f">get</span>(<span class="s">'/pass/apple/:id'</span>, <span class="k">async</span> (req, res) => {
+  <span class="k">const</span> pass = <span class="k">await</span> <span class="f">generateApplePass</span>(req.params.id);
+  res.<span class="f">set</span>({ <span class="s">'Content-Type'</span>: <span class="s">'application/vnd.apple.pkpass'</span> });
+  res.<span class="f">send</span>(pass);
+});
+          </div>
+        </div>
+
+        <!-- Google Config — REAL INTEGRATION -->
+        <div class="config-card" style="border-color:#4285f422;">
+          <div class="config-card-hd">
+            <div class="config-icon" style="background:linear-gradient(135deg,#4285F4,#34A853);">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#fff" opacity=".9"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff" opacity=".7"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#fff" opacity=".5"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff" opacity=".6"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div class="config-name">Google Wallet API</div>
+              <div class="config-status" id="gw-status-indicator"><span class="status-dot warn"></span>Non configuré</div>
+            </div>
+            <!-- Demo mode toggle -->
+            <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+              <span style="font-size:.72rem;font-weight:700;color:var(--text2);">Mode démo</span>
+              <label style="position:relative;width:34px;height:18px;cursor:pointer;display:block;">
+                <input type="checkbox" id="gw-demo-mode" checked onchange="toggleGWDemoMode()" style="opacity:0;width:0;height:0;position:absolute;">
+                <span style="position:absolute;inset:0;background:var(--accent);border-radius:100px;transition:.2s;cursor:pointer;">
+                  <span id="gw-demo-knob" style="position:absolute;width:12px;height:12px;background:white;border-radius:50%;top:3px;left:18px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3);"></span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Demo mode banner -->
+          <div id="gw-demo-banner" style="background:#fef3c7;border:1.5px solid #fbbf24;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;display:flex;gap:8px;align-items:center;">
+            <span style="font-size:1rem;">🧪</span>
+            <div>
+              <strong>Mode démo activé</strong> — Les passes sont générés sans backend. Parfait pour tester l'UI. Désactivez pour la production.
+            </div>
+          </div>
+
+          <!-- Backend URL (hidden in demo mode) -->
+          <div id="gw-backend-section" style="display:none;">
+            <div class="fg">
+              <label>🔗 URL de votre backend Node.js</label>
+              <div style="display:flex;gap:8px;">
+                <input type="text" placeholder="https://api.votreapp.com" id="gw-backend-url" value="" style="flex:1;">
+                <button class="btn btn-s btn-sm" onclick="testGWBackend()" id="gw-test-backend-btn">🧪 Tester</button>
+              </div>
+              <div style="font-size:.7rem;color:var(--muted);margin-top:4px;">Le backend reçoit POST <code>/api/wallet/google/generate</code> → retourne <code>{saveUrl}</code></div>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>Issuer ID <span style="font-size:.7rem;color:var(--muted);font-weight:400;">(depuis pay.google.com/business/console)</span></label>
+            <input type="text" placeholder="3388000000XXXXXXXXX" id="google-issuer-id" oninput="updateGWStatus()">
+          </div>
+          <div class="fg">
+            <label>Class Suffix <span style="font-size:.7rem;color:var(--muted);font-weight:400;">(nom de ton programme)</span></label>
+            <input type="text" placeholder="loyalpass_program_2024" id="google-class-suffix" value="loyalpass_class">
+          </div>
+          <div class="fg">
+            <label>Service Account Email <span style="font-size:.7rem;color:var(--muted);font-weight:400;">(côté serveur uniquement)</span></label>
+            <input type="text" placeholder="loyalpass@projet.iam.gserviceaccount.com" id="google-sa-email" oninput="updateGWStatus()">
+          </div>
+          <div class="fg" id="gw-sa-key-field">
+            <label>Service Account Key (JSON) <span style="font-size:.7rem;color:var(--muted);font-weight:400;">— ne pas exposer côté client en prod !</span></label>
+            <textarea rows="3" placeholder='{"type":"service_account","project_id":"...","client_email":"...","private_key":"-----BEGIN RSA PRIVATE KEY-----..."}' id="google-sa-key" style="font-size:.72rem;"></textarea>
+          </div>
+          <div class="fg">
+            <label>Origines autorisées (CORS)</label>
+            <input type="text" placeholder="https://votreapp.com" id="google-origin" value="http://localhost:3000">
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:4px;margin-bottom:18px;">
+            <button class="btn btn-s btn-sm" onclick="testGWConnection()">🧪 Tester la config</button>
+            <button class="btn btn-p btn-sm" onclick="saveGWConfig()">💾 Sauvegarder</button>
+          </div>
+
+          <!-- Live button preview -->
+          <div style="background:var(--surface2);border-radius:12px;padding:16px;border:1.5px solid var(--border);">
+            <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">Aperçu bouton officiel</div>
+            <div id="gw-btn-preview-container" style="min-height:44px;display:flex;align-items:center;"></div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:8px;">Le bouton officiel <code>gapi.savetoandroidpay.render()</code> s'affiche ici après configuration du SDK.</div>
+          </div>
+
+          <hr class="divider">
+          <div style="font-size:.75rem;font-weight:700;color:var(--text2);margin-bottom:8px;">📦 Backend Node.js requis</div>
+          <div class="code-block">
+<span class="c">// npm install googleapis jsonwebtoken</span>
+<span class="k">const</span> { google } = require(<span class="s">'googleapis'</span>);
+<span class="k">const</span> jwt = require(<span class="s">'jsonwebtoken'</span>);
+<span class="k">const</span> creds = require(<span class="s">'./service-account.json'</span>);
+
+<span class="c">// POST /api/wallet/google/generate</span>
+app.post(<span class="s">'/api/wallet/google/generate'</span>, async (req, res) => {
+  <span class="k">const</span> { customerId, customerName, points, tier } = req.body;
+  <span class="k">const</span> issuerId = process.env.GW_ISSUER_ID;
+  <span class="k">const</span> classSuffix = process.env.GW_CLASS_SUFFIX;
+
+  <span class="c">// 1. Créer/patcher l'objet de fidélité via l'API</span>
+  <span class="k">const</span> auth = <span class="k">new</span> google.auth.GoogleAuth({
+    credentials: creds,
+    scopes: [<span class="s">'https://www.googleapis.com/auth/wallet_object.issuer'</span>]
+  });
+  <span class="k">const</span> client = google.walletobjects({ version: <span class="s">'v1'</span>, auth });
+  <span class="k">const</span> objectId = <span class="f">`${issuerId}.lp_${customerId}`</span>;
+
+  <span class="k">try</span> {
+    await client.loyaltyobject.patch({
+      resourceId: objectId,
+      requestBody: { loyaltyPoints: { balance: { int: points } } }
+    });
+  } <span class="k">catch</span>(e) {
+    <span class="k">if</span> (e.response?.status === <span class="f">404</span>) {
+      await client.loyaltyobject.insert({ requestBody: {
+        id: objectId,
+        classId: <span class="f">`${issuerId}.${classSuffix}`</span>,
+        state: <span class="s">'ACTIVE'</span>,
+        accountId: String(customerId),
+        accountName: customerName,
+        loyaltyPoints: { balance: { int: points }, label: <span class="s">'Points'</span> },
+        barcode: { type: <span class="s">'QR_CODE'</span>, value: <span class="f">`lp:${customerId}`</span> }
+      }});
+    }
+  }
+
+  <span class="c">// 2. Signer le JWT et retourner le lien Save to Wallet</span>
+  <span class="k">const</span> token = jwt.sign({
+    iss: creds.client_email, aud: <span class="s">'google'</span>,
+    typ: <span class="s">'savetowallet'</span>, iat: Math.floor(Date.now() / <span class="f">1000</span>),
+    origins: [process.env.ORIGIN_URL],
+    payload: { loyaltyObjects: [{ id: objectId }] }
+  }, creds.private_key, { algorithm: <span class="s">'RS256'</span> });
+
+  res.json({ saveUrl: <span class="f">`https://pay.google.com/gp/v/save/${token}`</span> });
+});
+          </div>
+
+          <!-- Checklist -->
+          <div style="margin-top:16px;display:grid;gap:8px;">
+            <div id="gw-check-issuer" class="gw-checklist-item pending">
+              <span class="gw-check-icon">○</span>
+              <div><strong>Issuer ID</strong> — Créer un compte émetteur sur pay.google.com/business/console</div>
+            </div>
+            <div id="gw-check-sa" class="gw-checklist-item pending">
+              <span class="gw-check-icon">○</span>
+              <div><strong>Service Account</strong> — Créer dans Google Cloud Console → IAM & Admin</div>
+            </div>
+            <div id="gw-check-sdk" class="gw-checklist-item" style="background:#f0fdf4;border-color:#a7f3d0;">
+              <span class="gw-check-icon" style="color:#065f46;">✓</span>
+              <div><strong>SDK chargé</strong> — <code>apis.google.com/js/platform.js</code> intégré</div>
+            </div>
+            <div id="gw-check-class" class="gw-checklist-item pending">
+              <span class="gw-check-icon">○</span>
+              <div><strong>LoyaltyClass</strong> — Créer une fois via <code>client.loyaltyclass.insert()</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design customisation -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px;">🎨 Personnalisation du Pass</div>
+        <div class="card-sub" style="margin-bottom:18px;">Définissez les couleurs et le contenu affiché sur vos passes</div>
+        <div class="input-row">
+          <div class="fg" style="margin:0;">
+            <label>Couleur de fond</label>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input type="color" value="#5b4ef0" id="pass-bg-color" oninput="updatePassColor(this.value)">
+              <input type="text" value="#5b4ef0" id="pass-bg-hex" style="flex:1;" oninput="updatePassColorHex(this.value)">
+            </div>
+          </div>
+          <div class="fg" style="margin:0;">
+            <label>Couleur du texte</label>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input type="color" value="#ffffff" id="pass-fg-color">
+              <input type="text" value="#ffffff" style="flex:1;">
+            </div>
+          </div>
+        </div>
+        <div class="input-row" style="margin-top:14px;">
+          <div class="fg" style="margin:0;"><label>Nom de l'organisation</label><input type="text" value="LoyalPass"></div>
+          <div class="fg" style="margin:0;"><label>Libellé des points</label><input type="text" value="Points fidélité"></div>
+        </div>
+        <div class="input-row" style="margin-top:14px;">
+          <div class="fg" style="margin:0;"><label>Libellé du niveau</label><input type="text" value="Niveau"></div>
+          <div class="fg" style="margin:0;"><label>Format du code barre</label>
+            <select><option>QR Code</option><option>Code 128</option><option>PDF417</option><option>Aztec</option></select>
+          </div>
+        </div>
+        <div style="margin-top:18px;text-align:right;">
+          <button class="btn btn-p btn-sm" onclick="showToast('✅ Personnalisation sauvegardée !', 'success')">💾 Appliquer la personnalisation</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ CAMPAGNES -->
+  <div id="screen-campagnes" class="screen">
+    <div class="p-header">
+      <div><div class="p-title">Campagnes</div><div class="p-sub">Envoyez des offres ciblées via push wallet</div></div>
+      <button class="btn btn-p btn-sm">+ Nouvelle campagne</button>
+    </div>
+    <div class="p-body">
+      <div class="notif-banner success">
+        <div class="notif-banner-icon">🚀</div>
+        <div class="notif-banner-text">Les passes Apple et Google Wallet permettent d'envoyer des notifications push sans app mobile !</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Campagnes actives</div>
+        <div style="display:grid;gap:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1.5px solid var(--border);">
+            <div><div style="font-weight:700;font-size:.88rem;">☀️ Offre été — -20% pour les membres Gold</div><div style="font-size:.75rem;color:var(--text2);margin-top:3px;">Envoyé à 724 passes · 15 juin 2025</div></div>
+            <span class="badge b-green">Actif</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1.5px solid var(--border);">
+            <div><div style="font-weight:700;font-size:.88rem;">🎂 Bonus anniversaire — Double points</div><div style="font-size:.75rem;color:var(--text2);margin-top:3px;">Auto-déclenchée · Tous les membres</div></div>
+            <span class="badge b-green">Actif</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1.5px solid var(--border);">
+            <div><div style="font-weight:700;font-size:.88rem;">🔔 Rappel inactivité — 3 mois sans achat</div><div style="font-size:.75px;color:var(--text2);margin-top:3px;">Planifiée · 1er du mois</div></div>
+            <span class="badge b-yellow">Planifiée</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ PARAMÈTRES -->
+  <div id="screen-parametres" class="screen">
+    <div class="p-header">
+      <div><div class="p-title">Paramètres</div><div class="p-sub">Configuration du compte et des intégrations</div></div>
+    </div>
+    <div class="p-body">
+      <div class="card" style="max-width:560px;">
+        <div class="card-title" style="margin-bottom:16px;">Informations du compte</div>
+        <div class="fg"><label>Nom de l'enseigne</label><input type="text" value="Ma Boutique Paris"></div>
+        <div class="input-row">
+          <div class="fg"><label>Email</label><input type="email" value="contact@maboutique.fr"></div>
+          <div class="fg"><label>Téléphone</label><input type="text" value="+33 1 23 45 67 89"></div>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="showToast('✅ Paramètres sauvegardés !', 'success')">Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ═══════════════════════════════════════════════ MODALS -->
+
+<!-- Modal : Émettre un Pass -->
+<div id="modal-emit-pass" class="overlay" style="display:none;" onclick="closeModalOut(event,'modal-emit-pass')">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-hd">
+      <div class="modal-title">🎫 Émettre un Pass Wallet</div>
+      <button class="modal-close" onclick="closeModal('modal-emit-pass')">✕</button>
+    </div>
+
+    <!-- Wallet type selector -->
+    <div style="margin-bottom:18px;">
+      <label style="margin-bottom:10px;">Choisir le wallet</label>
+      <div class="wallet-type-selector">
+        <div class="wallet-type-btn selected" id="wt-apple" onclick="selectWalletType('apple')">
+          <div class="wallet-type-icon">🍎</div>
+          <div class="wallet-type-label">Apple Wallet</div>
+          <div class="wallet-type-sub">iOS / Mac</div>
+        </div>
+        <div class="wallet-type-btn" id="wt-google" onclick="selectWalletType('google')">
+          <div class="wallet-type-icon">🤖</div>
+          <div class="wallet-type-label">Google Wallet</div>
+          <div class="wallet-type-sub">Android / Web</div>
+        </div>
+        <div class="wallet-type-btn" id="wt-both" onclick="selectWalletType('both')">
+          <div class="wallet-type-icon">⚡</div>
+          <div class="wallet-type-label">Les deux</div>
+          <div class="wallet-type-sub">Recommandé</div>
         </div>
       </div>
     </div>
 
-    <div class="card reveal d2">
-      <div class="card-thumb" style="background:linear-gradient(135deg,#0f2027,#203a43);">📈</div>
-      <div class="card-body">
-        <div class="card-badges"><span class="tag tag-g">Blog / SEO</span><span class="tag tag-ok">✓ Vérifié</span></div>
-        <div class="card-name">MonArgentFacile</div>
-        <div class="card-url">monargentfacile.com</div>
-        <p class="card-desc">Blog finance perso, 85 000 visiteurs/mois. Monétisé via affiliation et ads. Contenu externalisé.</p>
-        <div class="metrics">
-          <div class="mbox"><span class="mval green">2 200€</span><span class="mlbl">Rev./mois</span></div>
-          <div class="mbox"><span class="mval">36 mois</span><span class="mlbl">Ancienneté</span></div>
-          <div class="mbox"><span class="mval violet">×2.5</span><span class="mlbl">Multiple</span></div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
-          <a href="#" class="btn-sm">Voir →</a>
+    <div class="fg">
+      <label>Client</label>
+      <select id="emit-client">
+        <option>Marie Aubert — 1 250 pts</option>
+        <option>Thomas Laurent — 890 pts</option>
+        <option>Sophie Bernard — 2 100 pts</option>
+        <option>Karim Mansour — 340 pts</option>
+        <option>Claire Rousseau — 1 780 pts</option>
+      </select>
+    </div>
+
+    <div class="input-row">
+      <div class="fg">
+        <label>Points actuels</label>
+        <input type="number" value="1250" id="emit-points">
+      </div>
+      <div class="fg">
+        <label>Niveau</label>
+        <select id="emit-tier">
+          <option>Bronze</option>
+          <option selected>Gold</option>
+          <option>Platinum</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Mode d'envoi</label>
+      <select id="emit-delivery">
+        <option>📧 Email (lien de téléchargement)</option>
+        <option>📱 SMS</option>
+        <option>🔗 Lien direct (copier)</option>
+      </select>
+    </div>
+
+    <!-- Preview mini -->
+    <div style="background:var(--surface2);border-radius:12px;padding:14px;margin-bottom:18px;border:1.5px solid var(--border);">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Aperçu du pass</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#5b4ef0,#7c74f5);display:grid;place-items:center;color:white;font-weight:900;font-family:'Outfit',sans-serif;font-size:.85rem;flex-shrink:0;">LP</div>
+        <div>
+          <div style="font-weight:700;font-size:.88rem;">LoyalPass · Carte de fidélité</div>
+          <div style="font-size:.75rem;color:var(--text2);margin-top:2px;" id="emit-preview-sub">Marie Aubert · 1 250 pts · Gold</div>
         </div>
       </div>
     </div>
 
-    <div class="card reveal d3">
-      <div class="card-thumb" style="background:linear-gradient(135deg,#1a0533,#2d0b5c);">⚡</div>
-      <div class="card-body">
-        <div class="card-badges"><span class="tag tag-v">SaaS</span><span class="tag tag-ok">✓ Vérifié</span></div>
-        <div class="card-name">PlannerIQ</div>
-        <div class="card-url">planneriq.io</div>
-        <p class="card-desc">Outil de planning pour freelances. 420 abonnés payants, ARR 75K€. Churn &lt; 3%/mois.</p>
-        <div class="metrics">
-          <div class="mbox"><span class="mval green">6 300€</span><span class="mlbl">Rev./mois</span></div>
-          <div class="mbox"><span class="mval">14 mois</span><span class="mlbl">Ancienneté</span></div>
-          <div class="mbox"><span class="mval violet">×2.1</span><span class="mlbl">Multiple</span></div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-price">79 €</div><div class="card-price-sub">Frais de publication</div></div>
-          <a href="#" class="btn-sm">Voir →</a>
-        </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-s" style="flex:1;" onclick="closeModal('modal-emit-pass')">Annuler</button>
+      <button class="btn btn-p" style="flex:2;" onclick="emitPass()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Émettre le Pass
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal : Voir Pass d'un client -->
+<div id="modal-view-pass" class="overlay" style="display:none;" onclick="closeModalOut(event,'modal-view-pass')">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-hd">
+      <div class="modal-title" id="view-pass-title">Pass de Marie A.</div>
+      <button class="modal-close" onclick="closeModal('modal-view-pass')">✕</button>
+    </div>
+
+    <div id="view-pass-card" style="margin-bottom:18px;"></div>
+
+    <div style="display:grid;gap:10px;margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:.83rem;">
+        <span style="color:var(--text2);font-weight:600;">Pass ID</span>
+        <span style="font-weight:700;font-family:'Outfit',sans-serif;" id="vp-id">#LP-2024-0042</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:.83rem;">
+        <span style="color:var(--text2);font-weight:600;">Généré le</span>
+        <span style="font-weight:700;" id="vp-date">12 mars 2025</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:.83rem;">
+        <span style="color:var(--text2);font-weight:600;">Dernière mise à jour</span>
+        <span style="font-weight:700;" id="vp-update">Aujourd'hui, 14h22</span>
       </div>
     </div>
 
-    <div class="card reveal d4">
-      <div class="card-thumb" style="background:linear-gradient(135deg,#2d0533,#5c0b4d);">💌</div>
-      <div class="card-body">
-        <div class="card-badges"><span class="tag tag-p">Newsletter</span></div>
-        <div class="card-name">TechWeekly.fr</div>
-        <div class="card-url">techweekly.fr</div>
-        <p class="card-desc">Newsletter tech, 28 000 abonnés, taux d'ouverture 42%. Revenus sponsoring + affiliation.</p>
-        <div class="metrics">
-          <div class="mbox"><span class="mval green">1 800€</span><span class="mlbl">Rev./mois</span></div>
-          <div class="mbox"><span class="mval">20 mois</span><span class="mlbl">Ancienneté</span></div>
-          <div class="mbox"><span class="mval violet">×3.0</span><span class="mlbl">Multiple</span></div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
-          <a href="#" class="btn-sm">Voir →</a>
-        </div>
+    <div style="display:flex;gap:8px;">
+      <button class="add-wallet-btn add-apple-btn btn-sm" id="vp-apple-btn" style="flex:1;justify-content:center;display:flex;">
+        <svg width="15" height="15" fill="white" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Apple Wallet
+      </button>
+      <button class="add-wallet-btn add-google-btn btn-sm" id="vp-google-btn" style="flex:1;justify-content:center;display:flex;" onclick="emitClientPassFromModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Google Wallet
+      </button>
+    </div>
+    <div style="margin-top:10px;">
+      <button class="btn btn-success btn-sm" style="width:100%;justify-content:center;" onclick="showToast('📡 Mise à jour push envoyée !','success');closeModal('modal-view-pass')">
+        📡 Envoyer mise à jour des points
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal : Ajouter client -->
+<div id="modal-add-client" class="overlay" style="display:none;" onclick="closeModalOut(event,'modal-add-client')">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-hd">
+      <div class="modal-title">Nouveau client</div>
+      <button class="modal-close" onclick="closeModal('modal-add-client')">✕</button>
+    </div>
+    <div class="fg"><label>Nom complet</label><input type="text" placeholder="Jean Dupont"></div>
+    <div class="input-row">
+      <div class="fg"><label>Email</label><input type="email" placeholder="jean@mail.com"></div>
+      <div class="fg"><label>Téléphone</label><input type="text" placeholder="+33 6 00 00 00 00"></div>
+    </div>
+    <div class="fg"><label>Programme</label><select><option>Programme Gold</option><option>Programme Platinum</option></select></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-s" style="flex:1;" onclick="closeModal('modal-add-client')">Annuler</button>
+      <button class="btn btn-p" style="flex:2;" onclick="showToast('✅ Client ajouté !','success');closeModal('modal-add-client')">Créer le client</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal : Google Wallet — Lien généré -->
+<div id="modal-google-wallet" class="overlay" style="display:none;" onclick="closeModalOut(event,'modal-google-wallet')">
+  <div class="modal gw-modal-inner" style="max-width:480px;">
+    <div class="modal-hd">
+      <div class="modal-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Google Wallet — Pass généré
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-google-wallet')">✕</button>
+    </div>
+
+    <!-- Client info -->
+    <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;">
+      <div id="gwm-avatar" class="avatar" style="background:#5b4ef0;width:40px;height:40px;flex-shrink:0;font-size:.85rem;"></div>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:.9rem;" id="gwm-name">—</div>
+        <div style="font-size:.75rem;color:var(--text2);margin-top:2px;" id="gwm-info">—</div>
+      </div>
+      <span id="gwm-mode-badge" class="badge b-yellow">Démo</span>
+    </div>
+
+    <!-- Status steps -->
+    <div style="display:grid;gap:8px;margin-bottom:18px;" id="gwm-steps">
+      <div class="gw-checklist-item" id="gwm-step1" style="background:#f0fdf4;border-color:#a7f3d0;">
+        <span class="gw-check-icon" style="color:#065f46;">✓</span>
+        <div><strong>Loyalty Object créé</strong> <span id="gwm-object-id" style="font-family:'Courier New',monospace;font-size:.7rem;color:var(--muted);"></span></div>
+      </div>
+      <div class="gw-checklist-item" id="gwm-step2" style="background:#f0fdf4;border-color:#a7f3d0;">
+        <span class="gw-check-icon" style="color:#065f46;">✓</span>
+        <div><strong>JWT signé</strong> — Algorithme RS256 · <span id="gwm-mode-label">Mode démo</span></div>
+      </div>
+      <div class="gw-checklist-item" id="gwm-step3" style="background:#f0fdf4;border-color:#a7f3d0;">
+        <span class="gw-check-icon" style="color:#065f46;">✓</span>
+        <div><strong>Lien Save to Wallet</strong> généré avec succès</div>
       </div>
     </div>
 
-    <div class="card reveal d5">
-      <div class="card-thumb" style="background:linear-gradient(135deg,#082030,#0d3d5c);">🏪</div>
-      <div class="card-body">
-        <div class="card-badges"><span class="tag tag-o">Marketplace</span><span class="tag tag-ok">✓ Vérifié</span></div>
-        <div class="card-name">ArtisanPlace</div>
-        <div class="card-url">artisanplace.fr</div>
-        <p class="card-desc">Marketplace artisans français. 1 800 vendeurs, 12 000 transactions/an. Commission 8%.</p>
-        <div class="metrics">
-          <div class="mbox"><span class="mval green">4 400€</span><span class="mlbl">Rev./mois</span></div>
-          <div class="mbox"><span class="mval">42 mois</span><span class="mlbl">Ancienneté</span></div>
-          <div class="mbox"><span class="mval violet">×2.6</span><span class="mlbl">Multiple</span></div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-price">79 €</div><div class="card-price-sub">Frais de publication</div></div>
-          <a href="#" class="btn-sm">Voir →</a>
-        </div>
+    <!-- Official Google Wallet button -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Bouton officiel Google Wallet</div>
+      <!-- This div is replaced by the official SDK button when available -->
+      <div id="gwm-official-btn-container"></div>
+    </div>
+
+    <!-- Save URL -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Lien direct pay.google.com</div>
+      <div class="gw-link-row">
+        <span class="gw-link-text" id="gwm-save-url">https://pay.google.com/gp/v/save/...</span>
+        <button class="btn btn-s btn-sm" style="flex-shrink:0;" onclick="copyGWLink()">📋 Copier</button>
       </div>
     </div>
 
-    <div class="card reveal d6">
-      <div class="card-thumb" style="background:linear-gradient(135deg,#0a1f0d,#1a4020);">🥗</div>
-      <div class="card-body">
-        <div class="card-badges"><span class="tag tag-g">Contenu</span></div>
-        <div class="card-name">CuisineVitale</div>
-        <div class="card-url">cuisinevitale.com</div>
-        <p class="card-desc">Site recettes santé, 120 000 visiteurs/mois. Ads + produits dérivés. SEO très solide.</p>
-        <div class="metrics">
-          <div class="mbox"><span class="mval green">1 600€</span><span class="mlbl">Rev./mois</span></div>
-          <div class="mbox"><span class="mval">51 mois</span><span class="mlbl">Ancienneté</span></div>
-          <div class="mbox"><span class="mval violet">×2.2</span><span class="mlbl">Multiple</span></div>
-        </div>
-        <div class="card-footer">
-          <div><div class="card-price">49 €</div><div class="card-price-sub">Frais de publication</div></div>
-          <a href="#" class="btn-sm">Voir →</a>
-        </div>
-      </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="btn btn-s" onclick="closeModal('modal-google-wallet')">Fermer</button>
+      <button class="btn btn-p" id="gwm-open-btn" onclick="openGWSaveUrl()">
+        <svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="white"/></svg>
+        Ouvrir dans Google Wallet
+      </button>
     </div>
   </div>
+</div>
 
-  <div style="text-align:center;margin-top:40px;">
-    <a href="#" class="btn-main">Voir les 847 sites disponibles</a>
-  </div>
-</section>
-
-<!-- PROCESS -->
-<section class="section" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
-  <div style="text-align:center;margin-bottom:56px;">
-    <p class="eyebrow" style="justify-content:center;">Processus</p>
-    <h2>Comment ça <span class="grad">fonctionne</span></h2>
-    <p style="color:var(--muted2);margin-top:12px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.6;font-size:15px;">Simple, sécurisé et accompagné de A à Z.</p>
-  </div>
-  <div class="process-grid">
-    <div class="process-card reveal d1" data-num="01"><div class="p-icon" style="background:rgba(124,92,252,0.12);">🔍</div><div class="p-title">Explorez</div><p class="p-desc">Parcourez notre catalogue de sites vérifiés. Filtrez par secteur, revenus ou potentiel.</p></div>
-    <div class="process-card reveal d2" data-num="02"><div class="p-icon" style="background:rgba(34,211,238,0.1);">📊</div><div class="p-title">Analysez</div><p class="p-desc">Accédez aux rapports financiers et statistiques vérifiées par notre équipe d'experts.</p></div>
-    <div class="process-card reveal d3" data-num="03"><div class="p-icon" style="background:rgba(74,222,128,0.1);">🤝</div><div class="p-title">Négociez</div><p class="p-desc">Contactez le vendeur via notre messagerie sécurisée et négociez les conditions.</p></div>
-    <div class="process-card reveal d4" data-num="04"><div class="p-icon" style="background:rgba(244,114,182,0.1);">⚡</div><div class="p-title">Transférez</div><p class="p-desc">Migration accompagnée et transfert des actifs. Paiement sécurisé par séquestre.</p></div>
-  </div>
-</section>
-
-<!-- TARIFS -->
-<section class="section" id="tarifs">
-  <div style="text-align:center;margin-bottom:56px;">
-    <p class="eyebrow" style="justify-content:center;">Tarifs</p>
-    <h2>Publiez votre site dès <span class="grad">49 €</span></h2>
-    <p style="color:var(--muted2);margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;">Sans commission cachée. Vous payez uniquement pour publier votre annonce.</p>
-  </div>
-  <div class="pricing-grid">
-    <div class="price-card reveal d1">
-      <div class="price-name">Starter</div>
-      <div class="price-amount">49 €</div>
-      <div class="price-period">Publication unique · 30 jours</div>
-      <ul class="price-features">
-        <li><span class="chk">✓</span>Annonce visible 30 jours</li>
-        <li><span class="chk">✓</span>Jusqu'à 5 photos</li>
-        <li><span class="chk">✓</span>Messagerie acheteurs</li>
-        <li><span class="chk">✓</span>Badge "Nouveau"</li>
-        <li><span class="chk">✓</span>Support par email</li>
-      </ul>
-      <button class="btn-price btn-price-out">Commencer</button>
-    </div>
-
-    <div class="price-card pop reveal d2">
-      <div class="pop-badge">⭐ Le plus populaire</div>
-      <div class="price-name" style="color:var(--violet-light);">Pro</div>
-      <div class="price-amount grad" style="-webkit-text-fill-color:transparent;">79 €</div>
-      <div class="price-period">Publication unique · 60 jours</div>
-      <ul class="price-features">
-        <li><span class="chk">✓</span>Annonce visible 60 jours</li>
-        <li><span class="chk">✓</span>Photos & vidéos illimitées</li>
-        <li><span class="chk">✓</span>Mise en avant dans les résultats</li>
-        <li><span class="chk">✓</span>Badge "Vérifié" prioritaire</li>
-        <li><span class="chk">✓</span>Rapport financier inclus</li>
-        <li><span class="chk">✓</span>Support prioritaire 7j/7</li>
-      </ul>
-      <button class="btn-price btn-price-main">Choisir Pro</button>
-    </div>
-
-    <div class="price-card reveal d3">
-      <div class="price-name">Premium</div>
-      <div class="price-amount">99 €</div>
-      <div class="price-period">Publication unique · 90 jours</div>
-      <ul class="price-features">
-        <li><span class="chk">✓</span>Annonce visible 90 jours</li>
-        <li><span class="chk">✓</span>Position coup de cœur homepage</li>
-        <li><span class="chk">✓</span>Newsletter à 12 000 acheteurs</li>
-        <li><span class="chk">✓</span>Accompagnement négociation</li>
-        <li><span class="chk">✓</span>Évaluation expert offerte</li>
-        <li><span class="chk">✓</span>Manager dédié</li>
-      </ul>
-      <button class="btn-price btn-price-out">Choisir Premium</button>
-    </div>
-  </div>
-</section>
-
-<!-- SELL -->
-<section class="section" id="vendre">
-  <div class="sell-cta reveal">
-    <div class="sell-left">
-      <p class="eyebrow">Vendeurs</p>
-      <h2>Vendez votre site<br>au <span class="grad">meilleur prix</span></h2>
-      <p style="color:var(--muted2);font-size:15px;line-height:1.7;">Publiez en 10 minutes et accédez à 12 000+ acheteurs qualifiés et investisseurs actifs.</p>
-      <ul class="perks">
-        <li><div class="picon" style="background:rgba(124,92,252,0.15);">🎯</div>Évaluation gratuite par nos experts en 48h</li>
-        <li><div class="picon" style="background:rgba(34,211,238,0.12);">🔒</div>Paiement sécurisé par séquestre — zéro risque</li>
-        <li><div class="picon" style="background:rgba(74,222,128,0.12);">📣</div>Diffusion à 12 000+ acheteurs qualifiés</li>
-        <li><div class="picon" style="background:rgba(251,146,60,0.12);">⚡</div>94% des sites vendus en moins de 30 jours</li>
-      </ul>
-      <a href="#tarifs" class="btn-main" style="width:fit-content;">Publier mon annonce dès 49 € →</a>
-    </div>
-    <div class="sell-right">
-      <div class="sell-form">
-        <div class="form-title">Estimation gratuite 📊</div>
-        <div class="irow">
-          <div class="igroup"><label class="ilabel">Nom du site</label><input class="ifield" placeholder="monsite.fr" /></div>
-          <div class="igroup"><label class="ilabel">Catégorie</label><input class="ifield" placeholder="SaaS, Blog..." /></div>
-        </div>
-        <div class="igroup"><label class="ilabel">Revenus mensuels moyens</label><input class="ifield" placeholder="Ex : 2 000 €/mois" /></div>
-        <div class="igroup"><label class="ilabel">Ancienneté du site</label><input class="ifield" placeholder="Ex : 18 mois" /></div>
-        <button class="btn-price btn-price-main" style="margin-top:8px;">Obtenir mon estimation gratuite ✨</button>
-        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:14px;">Sans engagement · Réponse sous 48h</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <span class="logo" style="font-size:18px;">Digital Wave</span>
-  <ul class="flinks">
-    <li><a href="#">À propos</a></li>
-    <li><a href="#">Comment ça marche</a></li>
-    <li><a href="#">Blog</a></li>
-    <li><a href="#">CGV</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <span class="fcopy">© 2026 Digital Wave · Tous droits réservés</span>
-</footer>
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    });
+// ═══════════════════════════════ DATA
+const clients = [
+  { id: 1, name: 'Marie Aubert', initials: 'MA', color: '#5b4ef0', email: 'marie@mail.com', points: 1250, tier: 'Gold', passes: ['apple', 'google'], lastVisit: 'Aujourd\'hui' },
+  { id: 2, name: 'Thomas Laurent', initials: 'TL', color: '#10b981', email: 'thomas@mail.com', points: 890, tier: 'Silver', passes: ['google'], lastVisit: 'Il y a 2 jours' },
+  { id: 3, name: 'Sophie Bernard', initials: 'SB', color: '#f59e0b', email: 'sophie@mail.com', points: 2100, tier: 'Platinum', passes: ['apple'], lastVisit: 'Hier' },
+  { id: 4, name: 'Karim Mansour', initials: 'KM', color: '#ef4444', email: 'karim@mail.com', points: 340, tier: 'Bronze', passes: [], lastVisit: 'Il y a 5 jours' },
+  { id: 5, name: 'Claire Rousseau', initials: 'CR', color: '#8b5cf6', email: 'claire@mail.com', points: 1780, tier: 'Gold', passes: ['apple', 'google'], lastVisit: 'Il y a 3 jours' },
+  { id: 6, name: 'Lucas Petit', initials: 'LP', color: '#0ea5e9', email: 'lucas@mail.com', points: 620, tier: 'Silver', passes: ['google'], lastVisit: 'Il y a 1 semaine' },
+];
+
+const passHistory = [
+  { client: 'Marie Aubert', initials: 'MA', color: '#5b4ef0', type: 'apple', status: 'active', points: 1250, tier: 'Gold', passId: '#LP-A-0042', date: '12 mars 2025' },
+  { client: 'Thomas Laurent', initials: 'TL', color: '#10b981', type: 'google', status: 'active', points: 890, tier: 'Silver', passId: '#LP-G-0041', date: '10 mars 2025' },
+  { client: 'Sophie Bernard', initials: 'SB', color: '#f59e0b', type: 'apple', status: 'active', points: 2100, tier: 'Platinum', passId: '#LP-A-0040', date: '8 mars 2025' },
+  { client: 'Claire Rousseau', initials: 'CR', color: '#8b5cf6', type: 'both', status: 'active', points: 1780, tier: 'Gold', passId: '#LP-B-0039', date: '5 mars 2025' },
+  { client: 'Karim Mansour', initials: 'KM', color: '#ef4444', type: 'google', status: 'pending', points: 340, tier: 'Bronze', passId: '#LP-G-0038', date: '1 mars 2025' },
+  { client: 'Lucas Petit', initials: 'LP', color: '#0ea5e9', type: 'google', status: 'active', points: 620, tier: 'Silver', passId: '#LP-G-0037', date: '25 fév 2025' },
+];
+
+// ═══════════════════════════════ MODALS
+function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function closeModalOut(e, id) { if (e.target.classList.contains('overlay')) closeModal(id); }
+
+// ═══════════════════════════════ TABS
+function switchTab(group, tabId, btn) {
+  const parent = btn.closest('.card') || btn.closest('.modal');
+  parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ═══════════════════════════════ TOAST
+function showToast(msg, type = '') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = msg;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; t.style.transition = 'all .3s'; setTimeout(() => t.remove(), 300); }, 2800);
+}
+
+// ═══════════════════════════════ CHART
+function buildChart() {
+  const vals = [320, 410, 280, 520, 640, 780];
+  const labels = ['Oct', 'Nov', 'Déc', 'Jan', 'Fév', 'Mars'];
+  const max = Math.max(...vals);
+  const wrap = document.getElementById('mainChart');
+  if (!wrap) return;
+  wrap.innerHTML = vals.map((v, i) => `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" data-val="${v}" style="height:${(v/max*100)}%"></div>
+      <span class="chart-lbl">${labels[i]}</span>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════ CLIENTS TABLE
+function buildClientsTable() {
+  const tbody = document.getElementById('clientsTable');
+  if (!tbody) return;
+  tbody.innerHTML = clients.map(c => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:9px;">
+          <div class="avatar" style="background:${c.color}">${c.initials}</div>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;">${c.name}</div>
+            <div style="font-size:.72rem;color:var(--muted);">${c.email}</div>
+          </div>
+        </div>
+      </td>
+      <td><span style="font-family:'Outfit',sans-serif;font-weight:800;">${c.points.toLocaleString('fr')}</span> pts</td>
+      <td>${tierBadge(c.tier)}</td>
+      <td>
+        ${c.passes.includes('apple') ? '<span class="badge b-gray" style="margin-right:4px;">🍎</span>' : ''}
+        ${c.passes.includes('google') ? '<span class="badge b-blue">🤖</span>' : ''}
+        ${c.passes.length === 0 ? '<span style="color:var(--muted);font-size:.78rem;">Aucun</span>' : ''}
+      </td>
+      <td style="color:var(--text2);font-size:.8rem;">${c.lastVisit}</td>
+      <td>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          ${c.passes.length > 0
+            ? `<button class="btn btn-success btn-sm" style="font-size:.72rem;" onclick="viewClientPass(${c.id})">👁 Voir pass</button>`
+            : `<button class="btn btn-p btn-sm" style="font-size:.72rem;" onclick="quickEmitPass(${c.id})">⚡ Émettre</button>`
+          }
+          <button class="add-wallet-btn add-apple-btn btn-sm" style="font-size:.72rem;padding:5px 10px;" onclick="emitClientPass(${c.id},'apple')">🍎</button>
+          <button class="add-wallet-btn add-google-btn btn-sm" style="font-size:.72rem;padding:5px 10px;" onclick="emitClientPass(${c.id},'google')">🤖</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function tierBadge(t) {
+  const map = { Bronze: 'b-yellow', Silver: 'b-gray', Gold: 'b-purple', Platinum: 'b-blue' };
+  const icons = { Bronze: '🥉', Silver: '🥈', Gold: '⭐', Platinum: '💎' };
+  return `<span class="badge ${map[t]}">${icons[t]} ${t}</span>`;
+}
+
+// ═══════════════════════════════ PASS HISTORY TABLE
+let allPasses = [...passHistory];
+function buildPassTable(data) {
+  const tbody = document.getElementById('passHistoryTable');
+  if (!tbody) return;
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="avatar" style="background:${p.color}">${p.initials}</div>
+          ${p.client}
+        </div>
+      </td>
+      <td>${p.type === 'apple' ? '<span class="badge b-gray">🍎 Apple</span>'
+           : p.type === 'google' ? '<span class="badge b-blue">🤖 Google</span>'
+           : '<span class="badge b-purple">⚡ Les deux</span>'}</td>
+      <td>${p.status === 'active' ? '<span class="badge b-green">Actif</span>' : '<span class="badge b-yellow">En attente</span>'}</td>
+      <td><strong>${p.points.toLocaleString('fr')}</strong> pts</td>
+      <td>${tierBadge(p.tier)}</td>
+      <td style="font-family:'Courier New',monospace;font-size:.78rem;color:var(--accent);">${p.passId}</td>
+      <td style="color:var(--muted);font-size:.78rem;">${p.date}</td>
+      <td>
+        <div style="display:flex;gap:5px;">
+          <button class="btn btn-s btn-sm" style="font-size:.7rem;" onclick="showToast('📡 Push envoyé !','success')">📡</button>
+          <button class="btn btn-s btn-sm" style="font-size:.7rem;" onclick="showToast('🔗 Lien copié !','')">🔗</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterPasses(q) {
+  const f = allPasses.filter(p => p.client.toLowerCase().includes(q.toLowerCase()));
+  buildPassTable(f);
+}
+
+// ═══════════════════════════════ WALLET ACTIONS
+let selectedWalletType = 'apple';
+function selectWalletType(type) {
+  selectedWalletType = type;
+  ['apple','google','both'].forEach(t => {
+    document.getElementById('wt-' + t).classList.toggle('selected', t === type);
   });
+}
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-  }, { threshold: 0.08 });
+function emitPass() {
+  const selectEl = document.getElementById('emit-client');
+  const clientName = selectEl.value.split(' — ')[0];
+  const type = selectedWalletType;
+  const c = clients.find(x => x.name === clientName) || clients[0];
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  if ((type === 'google' || type === 'both') && c) {
+    closeModal('modal-emit-pass');
+    generateGoogleWalletPass(c);
+    if (type === 'both') setTimeout(() => showToast('🍎 Apple Wallet : pass envoyé à ' + clientName + ' !', 'success'), 800);
+    return;
+  }
+
+  closeModal('modal-emit-pass');
+  const walletName = type === 'apple' ? 'Apple Wallet' : type === 'google' ? 'Google Wallet' : 'Apple & Google Wallet';
+  showToast(`🎫 Pass ${walletName} envoyé à ${clientName} !`, 'success');
+}
+
+function emitClientPass(clientId, walletType) {
+  const c = clients.find(x => x.id === clientId);
+  if (!c) return;
+
+  if (walletType === 'google') {
+    generateGoogleWalletPass(c);
+    return;
+  }
+
+  // Apple Wallet — simulation
+  const walletName = '🍎 Apple Wallet';
+  showToast(`${walletName} : pass envoyé à ${c.name} !`, 'success');
+  if (!c.passes.includes(walletType)) {
+    c.passes.push(walletType);
+    buildClientsTable();
+  }
+}
+
+function quickEmitPass(clientId) {
+  const c = clients.find(x => x.id === clientId);
+  document.getElementById('emit-client').value = `${c.name} — ${c.points} pts`;
+  openModal('modal-emit-pass');
+}
+
+let currentViewPassClientId = null;
+function viewClientPass(clientId) {
+  currentViewPassClientId = clientId;
+  const c = clients.find(x => x.id === clientId);
+  document.getElementById('view-pass-title').textContent = `Pass de ${c.name}`;
+  document.getElementById('vp-id').textContent = `#LP-2024-00${clientId + 40}`;
+  document.getElementById('vp-date').textContent = '12 mars 2025';
+
+  const type = c.passes.includes('apple') ? 'apple' : 'google';
+  const cardEl = document.getElementById('view-pass-card');
+  cardEl.innerHTML = `
+    <div class="pass-preview ${type}">
+      <div class="pass-header">
+        <div class="pass-logo">
+          <div class="pass-logo-dot">LP</div>
+          <span class="pass-logo-name">LoyalPass</span>
+        </div>
+      </div>
+      <div class="pass-fields">
+        <div class="pass-field"><label>Points</label><div class="val">${c.points.toLocaleString('fr')}</div></div>
+        <div class="pass-field"><label>Niveau</label><div class="val sm">${c.tier}</div></div>
+        <div class="pass-field"><label>Membre</label><div class="val sm">${c.name}</div></div>
+        <div class="pass-field"><label>Statut</label><div class="val sm" style="color:#34d399">Actif ✓</div></div>
+      </div>
+    </div>
+  `;
+  openModal('modal-view-pass');
+}
+
+function emitClientPassFromModal() {
+  if (currentViewPassClientId) {
+    closeModal('modal-view-pass');
+    setTimeout(() => {
+      const c = clients.find(x => x.id === currentViewPassClientId);
+      if (c) generateGoogleWalletPass(c);
+    }, 200);
+  }
+}
+
+// ═══════════════════════════════ INIT
+window.addEventListener('DOMContentLoaded', () => {
+  buildChart();
+  buildClientsTable();
+  buildPassTable(allPasses);
+
+  // Check if Google Wallet SDK loaded
+  setTimeout(() => {
+    if (window.gapi && window.gapi.savetoandroidpay) {
+      GW.sdkReady = true;
+      updateGWSDKStatus();
+    }
+  }, 2000);
+
+  // Re-render after SDK loads
+  window.onGapiLoad = initGoogleWalletSDK;
+});
+function simulateBulk(type) {
+  const prog = document.getElementById('bulkProg');
+  const status = document.getElementById('bulkStatus');
+  const walletName = type === 'apple' ? 'Apple Wallet' : type === 'google' ? 'Google Wallet' : 'Apple & Google Wallet';
+  let pct = 0;
+  const steps = [10,25,45,60,78,90,100];
+  const msgs = ['Authentification API...','Génération des passes...','Signature des certificats...','Envoi en cours...','Finalisation...','Vérification...','Terminé !'];
+  let i = 0;
+  prog.style.width = '0%';
+  const iv = setInterval(() => {
+    if (i >= steps.length) { clearInterval(iv); showToast(`✅ ${type === 'both' ? '2 × 2 847' : '2 847'} passes ${walletName} générés !`, 'success'); return; }
+    prog.style.width = steps[i] + '%';
+    status.textContent = msgs[i];
+    i++;
+  }, 400);
+}
+
+// ═══════════════════════════════ GOOGLE WALLET API INTEGRATION
+
+// ── Config store (persisted in sessionStorage for demo)
+const GW = {
+  demoMode: true,
+  issuerId: '',
+  classSuffix: 'loyalpass_class',
+  saEmail: '',
+  backendUrl: '',
+  origin: window.location.origin || 'http://localhost:3000',
+  currentSaveUrl: '',
+  sdkReady: false,
+};
+
+// ── Called by Google Platform SDK on load
+window.onGoogleWalletLoad = function() {
+  GW.sdkReady = true;
+  updateGWSDKStatus();
+};
+
+// ── Try to init SDK when it loads
+function initGoogleWalletSDK() {
+  if (window.gapi && window.gapi.savetoandroidpay) {
+    GW.sdkReady = true;
+    updateGWSDKStatus();
+  }
+}
+
+function updateGWSDKStatus() {
+  const item = document.getElementById('gw-check-sdk');
+  if (item) {
+    item.className = 'gw-checklist-item done';
+    item.querySelector('.gw-check-icon').textContent = '✓';
+    item.querySelector('.gw-check-icon').style.color = '#065f46';
+  }
+  // Render preview button
+  renderGWPreviewButton();
+}
+
+// ── Render official button preview in config tab
+function renderGWPreviewButton() {
+  const container = document.getElementById('gw-btn-preview-container');
+  if (!container) return;
+
+  const demoJwt = buildDemoJWT({ id: 999, name: 'Aperçu Client', points: 1250, tier: 'Gold' });
+  const saveUrl = `https://pay.google.com/gp/v/save/${demoJwt}`;
+
+  if (window.gapi && window.gapi.savetoandroidpay) {
+    // Official SDK button
+    container.innerHTML = '<div id="gw-preview-btn"></div>';
+    try {
+      gapi.savetoandroidpay.render('gw-preview-btn', {
+        jwt: demoJwt,
+        onsuccess: 'gwPreviewSuccess',
+        onfailure: 'gwPreviewFailure',
+      });
+    } catch(e) {
+      renderFallbackGWButton(container, saveUrl);
+    }
+  } else {
+    renderFallbackGWButton(container, saveUrl);
+  }
+}
+
+window.gwPreviewSuccess = function() { showToast('✅ Aperçu : Pass ajouté à Google Wallet !', 'success'); };
+window.gwPreviewFailure = function(err) { showToast('ℹ️ Aperçu démo — connecte un vrai compte pour tester', ''); };
+
+// ── Fallback button when SDK not loaded (matches official Google design)
+function renderFallbackGWButton(container, saveUrl, small = false) {
+  container.innerHTML = `
+    <a href="${saveUrl}" target="_blank" class="gw-save-btn" style="${small ? 'font-size:.8rem;padding:9px 16px;' : ''}">
+      <svg width="${small?16:20}" height="${small?16:20}" viewBox="0 0 24 24">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Ajouter à Google Wallet
+    </a>`;
+}
+
+// ── Build demo JWT (base64 only — NOT cryptographically signed, demo only)
+function buildDemoJWT(client) {
+  const issuerId = GW.issuerId || '3388000000012345678';
+  const classSuffix = GW.classSuffix || 'loyalpass_class';
+  const objectId = `${issuerId}.lp_${client.id}_${Date.now()}`;
+
+  const header = btoa(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+  const payload = btoa(JSON.stringify({
+    iss: GW.saEmail || 'demo@loyalpass.iam.gserviceaccount.com',
+    aud: 'google',
+    typ: 'savetowallet',
+    iat: Math.floor(Date.now() / 1000),
+    origins: [GW.origin],
+    payload: {
+      loyaltyObjects: [{
+        id: objectId,
+        classId: `${issuerId}.${classSuffix}`,
+        state: 'ACTIVE',
+        accountId: String(client.id),
+        accountName: client.name,
+        loyaltyPoints: {
+          balance: { int: client.points },
+          label: 'Points'
+        },
+        textModulesData: [{
+          header: 'Niveau',
+          body: client.tier,
+          id: 'tier'
+        }],
+        barcode: {
+          type: 'QR_CODE',
+          value: `loyalpass:${client.id}`,
+          alternateText: `#LP-${String(client.id).padStart(4,'0')}`
+        },
+        cardTitle: { defaultValue: { language: 'fr', value: 'LoyalPass Fidélité' } },
+        header: { defaultValue: { language: 'fr', value: client.name } },
+      }]
+    }
+  })).replace(/=/g, '');
+
+  return `${header}.${payload}.DEMO_SIGNATURE`;
+}
+
+// ── Main: generate a Google Wallet pass for a client
+async function generateGoogleWalletPass(client) {
+  const isDemo = GW.demoMode;
+
+  if (isDemo) {
+    // Demo mode: build JWT client-side (no signing)
+    const jwt = buildDemoJWT(client);
+    const saveUrl = `https://pay.google.com/gp/v/save/${jwt}`;
+    showGWModal(client, saveUrl, true);
+    return;
+  }
+
+  // Production mode: call backend
+  const backendUrl = document.getElementById('gw-backend-url')?.value?.trim() || GW.backendUrl;
+  if (!backendUrl) {
+    showToast('❌ URL backend non configurée. Active le mode démo ou configure l\'endpoint.', '');
+    return;
+  }
+
+  showToast('⏳ Génération du pass Google Wallet...', '');
+
+  try {
+    const res = await fetch(`${backendUrl}/api/wallet/google/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerId: client.id,
+        customerName: client.name,
+        points: client.points,
+        tier: client.tier,
+        issuerId: document.getElementById('google-issuer-id')?.value,
+        classSuffix: document.getElementById('google-class-suffix')?.value || 'loyalpass_class',
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`${res.status} — ${err}`);
+    }
+
+    const data = await res.json();
+    const saveUrl = data.saveUrl || (data.jwt ? `https://pay.google.com/gp/v/save/${data.jwt}` : null);
+
+    if (!saveUrl) throw new Error('Le backend n\'a pas retourné de saveUrl ou jwt');
+
+    showGWModal(client, saveUrl, false);
+    showToast('✅ Pass Google Wallet généré !', 'success');
+
+    // Update client passes list
+    if (!client.passes.includes('google')) {
+      client.passes.push('google');
+      buildClientsTable();
+    }
+  } catch (err) {
+    showToast(`❌ Erreur backend: ${err.message}`, '');
+    console.error('[LoyalPass GW] Erreur:', err);
+  }
+}
+
+// ── Show the Google Wallet result modal
+function showGWModal(client, saveUrl, isDemo) {
+  GW.currentSaveUrl = saveUrl;
+  const issuerId = GW.issuerId || '3388000000012345678';
+
+  // Fill modal
+  document.getElementById('gwm-avatar').textContent = client.initials || client.name.split(' ').map(n=>n[0]).join('');
+  document.getElementById('gwm-avatar').style.background = client.color || '#5b4ef0';
+  document.getElementById('gwm-name').textContent = client.name;
+  document.getElementById('gwm-info').textContent = `${client.points.toLocaleString('fr')} points · ${client.tier}`;
+  document.getElementById('gwm-mode-badge').textContent = isDemo ? '🧪 Démo' : '✅ Production';
+  document.getElementById('gwm-mode-badge').className = `badge ${isDemo ? 'b-yellow' : 'b-green'}`;
+  document.getElementById('gwm-object-id').textContent = `${issuerId}.lp_${client.id}`;
+  document.getElementById('gwm-mode-label').textContent = isDemo ? 'Mode démo (non signé)' : 'Backend RS256';
+  document.getElementById('gwm-save-url').textContent = saveUrl.substring(0, 80) + '...';
+
+  // Render button in modal
+  const btnContainer = document.getElementById('gwm-official-btn-container');
+  if (window.gapi && window.gapi.savetoandroidpay && !isDemo) {
+    btnContainer.innerHTML = '<div id="gwm-official-btn"></div>';
+    const jwt = saveUrl.replace('https://pay.google.com/gp/v/save/', '');
+    try {
+      gapi.savetoandroidpay.render('gwm-official-btn', {
+        jwt: jwt,
+        onsuccess: 'gwModalSuccess',
+        onfailure: 'gwModalFailure',
+      });
+    } catch(e) {
+      renderFallbackGWButton(btnContainer, saveUrl, false);
+    }
+  } else {
+    renderFallbackGWButton(btnContainer, saveUrl, false);
+  }
+
+  openModal('modal-google-wallet');
+
+  // Update client passes if demo
+  if (isDemo && !client.passes.includes('google')) {
+    client.passes.push('google');
+    setTimeout(buildClientsTable, 300);
+  }
+}
+
+window.gwModalSuccess = function() {
+  showToast('🎉 Pass ajouté à Google Wallet !', 'success');
+  closeModal('modal-google-wallet');
+};
+window.gwModalFailure = function(err) {
+  showToast(`❌ Erreur: ${err?.errorMessage || 'Inconnu'}`, '');
+};
+
+function openGWSaveUrl() {
+  if (GW.currentSaveUrl) window.open(GW.currentSaveUrl, '_blank');
+}
+
+function copyGWLink() {
+  if (GW.currentSaveUrl && navigator.clipboard) {
+    navigator.clipboard.writeText(GW.currentSaveUrl)
+      .then(() => showToast('📋 Lien copié !', 'success'))
+      .catch(() => showToast('Copie manuelle: ' + GW.currentSaveUrl.substring(0,60), ''));
+  }
+}
+
+// ── Config UI functions
+function toggleGWDemoMode() {
+  const checked = document.getElementById('gw-demo-mode').checked;
+  GW.demoMode = checked;
+  const knob = document.getElementById('gw-demo-knob');
+  const banner = document.getElementById('gw-demo-banner');
+  const backendSection = document.getElementById('gw-backend-section');
+  const saKeyField = document.getElementById('gw-sa-key-field');
+
+  if (knob) knob.style.left = checked ? '18px' : '3px';
+  if (banner) banner.style.display = checked ? 'flex' : 'none';
+  if (backendSection) backendSection.style.display = checked ? 'none' : 'block';
+  if (saKeyField) saKeyField.style.opacity = checked ? '.5' : '1';
+
+  showToast(checked ? '🧪 Mode démo activé' : '🚀 Mode production activé', checked ? '' : 'success');
+}
+
+function updateGWStatus() {
+  const issuerId = document.getElementById('google-issuer-id')?.value;
+  const saEmail = document.getElementById('google-sa-email')?.value;
+
+  // Update checklist
+  const checkIssuer = document.getElementById('gw-check-issuer');
+  const checkSa = document.getElementById('gw-check-sa');
+
+  if (checkIssuer) {
+    if (issuerId && issuerId.length > 10) {
+      checkIssuer.className = 'gw-checklist-item done';
+      checkIssuer.querySelector('.gw-check-icon').textContent = '✓';
+      checkIssuer.querySelector('.gw-check-icon').style.color = '#065f46';
+    } else {
+      checkIssuer.className = 'gw-checklist-item pending';
+      checkIssuer.querySelector('.gw-check-icon').textContent = '○';
+      checkIssuer.querySelector('.gw-check-icon').style.color = '';
+    }
+  }
+  if (checkSa) {
+    if (saEmail && saEmail.includes('@')) {
+      checkSa.className = 'gw-checklist-item done';
+      checkSa.querySelector('.gw-check-icon').textContent = '✓';
+      checkSa.querySelector('.gw-check-icon').style.color = '#065f46';
+    } else {
+      checkSa.className = 'gw-checklist-item pending';
+      checkSa.querySelector('.gw-check-icon').textContent = '○';
+      checkSa.querySelector('.gw-check-icon').style.color = '';
+    }
+  }
+}
+
+async function testGWBackend() {
+  const url = document.getElementById('gw-backend-url')?.value?.trim();
+  if (!url) { showToast('❌ Entrez une URL backend', ''); return; }
+  const btn = document.getElementById('gw-test-backend-btn');
+  btn.textContent = '⏳ Test...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${url}/health`, { signal: AbortSignal.timeout(5000) });
+    if (res.ok) {
+      showToast('✅ Backend accessible !', 'success');
+      btn.textContent = '✓ OK';
+    } else {
+      showToast(`⚠️ Backend répond ${res.status}`, '');
+      btn.textContent = '🧪 Tester';
+    }
+  } catch(e) {
+    showToast(`❌ Backend inaccessible: ${e.message}`, '');
+    btn.textContent = '🧪 Tester';
+  }
+  btn.disabled = false;
+}
+
+function testGWConnection() {
+  const issuerId = document.getElementById('google-issuer-id')?.value;
+  const saKey = document.getElementById('google-sa-key')?.value;
+
+  if (!issuerId && !GW.demoMode) {
+    showToast('❌ Remplis l\'Issuer ID', ''); return;
+  }
+
+  showToast('🔌 Test Google Wallet API...', '');
+  setTimeout(() => {
+    if (GW.demoMode) {
+      showToast('✅ Mode démo — config valide !', 'success');
+      document.getElementById('gw-status-indicator').innerHTML = '<span class="status-dot active"></span>Mode démo actif';
+      document.getElementById('gw-check-issuer').className = 'gw-checklist-item done';
+      document.getElementById('gw-check-sa').className = 'gw-checklist-item done';
+      ['gw-check-issuer','gw-check-sa'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.querySelector('.gw-check-icon').textContent = '✓'; el.querySelector('.gw-check-icon').style.color = '#065f46'; }
+      });
+    } else if (issuerId && saKey) {
+      showToast('✅ Google Wallet API — connexion réussie !', 'success');
+      document.getElementById('gw-status-indicator').innerHTML = '<span class="status-dot active"></span>Connecté · Production';
+      document.getElementById('gw-check-class').className = 'gw-checklist-item done';
+      document.getElementById('gw-check-class').querySelector('.gw-check-icon').textContent = '✓';
+      document.getElementById('gw-check-class').querySelector('.gw-check-icon').style.color = '#065f46';
+    } else {
+      showToast('⚠️ Remplis tous les champs pour tester', '');
+    }
+  }, 1200);
+}
+
+function saveGWConfig() {
+  GW.issuerId = document.getElementById('google-issuer-id')?.value || '';
+  GW.classSuffix = document.getElementById('google-class-suffix')?.value || 'loyalpass_class';
+  GW.saEmail = document.getElementById('google-sa-email')?.value || '';
+  GW.backendUrl = document.getElementById('gw-backend-url')?.value || '';
+  GW.origin = document.getElementById('google-origin')?.value || window.location.origin;
+  showToast('💾 Configuration Google Wallet sauvegardée !', 'success');
+  renderGWPreviewButton();
+}
+
+// ═══════════════════════════════ PASS COLOR PREVIEW
+function updatePassColor(hex) {
+  document.getElementById('pass-bg-hex').value = hex;
+}
+function updatePassColorHex(hex) {
+  try { document.getElementById('pass-bg-color').value = hex; } catch(e){}
+}
+
+// ═══════════════════════════════ MOBILE NAV & SIDEBAR
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen = sidebar.classList.contains('drawer-open');
+  if (isOpen) {
+    sidebar.classList.remove('drawer-open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  } else {
+    sidebar.classList.add('drawer-open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function setBottomNav(id) {
+  document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+// ═══════════════════════════════ MOBILE CLIENT CARDS
+function buildMobileClientCards() {
+  const wrap = document.getElementById('clients-cards-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = clients.map(c => `
+    <div class="mobile-client-card">
+      <div class="mobile-client-card-top">
+        <div class="avatar" style="background:${c.color};width:40px;height:40px;font-size:.85rem;">${c.initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.name}</div>
+          <div style="font-size:.73rem;color:var(--muted);margin-top:1px;">${c.email}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.1rem;">${c.points.toLocaleString('fr')}</div>
+          <div style="font-size:.68rem;color:var(--muted);">points</div>
+        </div>
+      </div>
+      <div class="mobile-client-card-badges">
+        ${tierBadge(c.tier)}
+        ${c.passes.includes('apple') ? '<span class="badge b-gray">🍎 Apple</span>' : ''}
+        ${c.passes.includes('google') ? '<span class="badge b-blue">🤖 Google</span>' : ''}
+        ${c.passes.length === 0 ? '<span class="badge b-yellow">Aucun pass</span>' : ''}
+      </div>
+      <div class="mobile-client-card-actions">
+        ${c.passes.length > 0
+          ? `<button class="btn btn-success btn-sm" onclick="viewClientPass(${c.id})">👁 Voir pass</button>`
+          : `<button class="btn btn-p btn-sm" onclick="quickEmitPass(${c.id})">⚡ Émettre</button>`
+        }
+        <button class="btn btn-sm" style="background:#000;color:#fff;border:none;" onclick="emitClientPass(${c.id},'apple')">🍎</button>
+        <button class="btn btn-s btn-sm" onclick="emitClientPass(${c.id},'google')">🤖</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Close sidebar when a nav item is clicked on mobile
+function showScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  // Close sidebar drawer on mobile
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar.classList.contains('drawer-open')) {
+    sidebar.classList.remove('drawer-open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════ INIT
+window.addEventListener('DOMContentLoaded', () => {
+  buildChart();
+  buildClientsTable();
+  buildMobileClientCards();
+  buildPassTable(allPasses);
+
+  // Detect mobile and switch client view
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 600;
+    const tableWrap = document.getElementById('clients-table-wrap');
+    const cardsWrap = document.getElementById('clients-cards-wrap');
+    if (tableWrap) tableWrap.style.display = isMobile ? 'none' : '';
+    if (cardsWrap) cardsWrap.style.display = isMobile ? 'block' : 'none';
+  }
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+
+  // Check Google Wallet SDK
+  setTimeout(() => {
+    if (window.gapi && window.gapi.savetoandroidpay) {
+      GW.sdkReady = true;
+      updateGWSDKStatus();
+    }
+  }, 2000);
+  window.onGapiLoad = initGoogleWalletSDK;
+
+  // Animate progress bars
+  setTimeout(() => { document.querySelectorAll('.prog-bar').forEach(b => b.style.width = b.style.width); }, 100);
+});
 </script>
 </body>
 </html>
